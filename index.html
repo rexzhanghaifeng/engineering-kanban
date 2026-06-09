@@ -2,6 +2,9 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>工程结算管理看板</title>
 <style>
@@ -359,9 +362,9 @@
 
 <script>
 // ===================== DATA (完全同步，100%可靠) =====================
-const CACHE_KEY = 'engineering_kanban_cache';
-const GIST_ID = 'e120cfbc51a410e7f0f5449ca3de746b';
-const TOKEN_KEY = 'gh_kanban_token';
+var CACHE_KEY = 'engineering_kanban_cache';
+var GIST_ID = 'e120cfbc51a410e7f0f5449ca3de746b';
+var TOKEN_KEY = 'gh_kanban_token';
 
 (function() {
   var wf = ["施工单位提交","监理审核","业主审核","临港管委会生态处","发改处","审批完成"];
@@ -374,22 +377,22 @@ const TOKEN_KEY = 'gh_kanban_token';
   var generalBlock = '生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议';
 
   window.appData = {
-    version: "2.0", lastUpdated: now.toISOString(),
+    version: "2.1", lastUpdated: now.toISOString(),
     settings: { defaultWorkflow: wf.slice() }, activeProjectIndex: 0,
     projects: [
-      { id:'proj_001',name:'临港污水处理厂排海管工程',categories:[
-        mkCat('c001','变更一：云水路开道口和团结塘大堤堤顶加宽施工',wf,3,generalBlock,[mkRec(1,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处安排会议审核','pending'),mkRec(2,dStr(8),'向业主提交变更签证资料','业主已确认接收','positive')],327.78),
+      { id:'proj_001',name:'临港污水处理厂排海管工程',projectBlockingIssue:generalBlock,categories:[
+        mkCat('c001','变更一：云水路开道口和团结塘大堤堤顶加宽施工',wf,3,'',[mkRec(1,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处安排会议审核','pending'),mkRec(2,dStr(8),'向业主提交变更签证资料','业主已确认接收','positive')],327.78),
         mkCat('c002','变更二：压力井结构变更（方改圆）',wf,5,'',[mkRec(3,dStr(1),'临港管委会生态处已签章，审批完成','变更单已完成全部审批流程','positive'),mkRec(4,dStr(5),'业主完成签字，项目部配合送交生态处','生态处签收','positive')],254.86),
         mkCat('c003','变更三：透气阀井变更',wfSimple,3,'',[mkRec(5,dStr(1),'业主已完成签字盖章，流程至业主即完成','变更审批已完成','positive'),mkRec(6,dStr(7),'提交变更签证资料至业主审核','业主已确认','positive')],3.74),
-        mkCat('c004','变更四：排海泵房至高位井（埋管变更顶管，加固保护）',wf,3,generalBlock,[mkRec(7,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),mkRec(8,dStr(9),'完成监理审核及业主初审','监理意见：方案合理，同意变更','positive')],124.27),
+        mkCat('c004','变更四：排海泵房至高位井（埋管变更顶管，加固保护）',wf,3,'',[mkRec(7,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),mkRec(8,dStr(9),'完成监理审核及业主初审','监理意见：方案合理，同意变更','positive')],124.27),
         mkCat('c005','变更五：排海泵房出水端闸门变更为2400不锈钢钢制闸门',wfSimple,3,'',[mkRec(9,dStr(1),'业主已完成签字盖章，流程至业主即完成','变更审批已完成','positive'),mkRec(10,dStr(8),'提交变更签证资料','业主已确认','positive')],12.70),
-        mkCat('c006','变更六：配水井（增加MJS保护）',wf,3,generalBlock,[mkRec(11,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),mkRec(12,dStr(10),'资料提交至业主，监理已完成审核','等待业主签字确认','positive')],102.47),
+        mkCat('c006','变更六：配水井（增加MJS保护）',wf,3,'',[mkRec(11,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),mkRec(12,dStr(10),'资料提交至业主，监理已完成审核','等待业主签字确认','positive')],102.47),
         mkCat('c007','变更七：仪表小屋搬迁改造及废水水质检测',wfSimple,3,'',[mkRec(13,dStr(1),'业主已完成签字盖章，流程至业主即完成','变更审批已完成','positive'),mkRec(14,dStr(7),'提交变更签证资料至业主审核','业主已确认','positive')],41.59),
-        mkCat('c008','变更八：海域顶管变更费用（曲线顶管增加中继间、钢管厚度调整）',wf,3,generalBlock,[mkRec(15,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核；竣工图设计院工艺专业核对中','pending'),mkRec(16,dStr(12),'完成曲线顶管变更论证及费用测算','监理认可变更理由及费用','positive')],301.02),
-        mkCat('c009','变更九：清单漏项（牺牲阳极块、钻孔灌注桩、DN2200穿墙套管等）',wf,3,generalBlock,[mkRec(17,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),mkRec(18,dStr(11),'完成清单漏项资料汇总并提交监理','监理审核通过，转业主','positive')],360.87),
+        mkCat('c008','变更八：海域顶管变更费用（曲线顶管增加中继间、钢管厚度调整）',wf,3,'',[mkRec(15,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核；竣工图设计院工艺专业核对中','pending'),mkRec(16,dStr(12),'完成曲线顶管变更论证及费用测算','监理认可变更理由及费用','positive')],301.02),
+        mkCat('c009','变更九：清单漏项（牺牲阳极块、钻孔灌注桩、DN2200穿墙套管等）',wf,3,'',[mkRec(17,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),mkRec(18,dStr(11),'完成清单漏项资料汇总并提交监理','监理审核通过，转业主','positive')],360.87),
         mkCat('c010','变更十：材料调差',wf,4,'除临港管委会外，后续还需发改处审批',[mkRec(19,dStr(3),'业主已签字，临港管委会上报中','后续还有发改处需要审核','pending'),mkRec(20,dStr(15),'完成材料调差核算报告','监理和业主均认可调差范围和金额','positive')],985.97)
       ]},
-      { id:'proj_002',name:'前程路电力隧道工程',categories:[
+      { id:'proj_002',name:'前程路电力隧道工程',projectBlockingIssue:'',categories:[
         mkCat('c101','变更一：5#井MJS洞口加固',wfQc,4,'',[mkRec(101,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],128.80),
         mkCat('c102','变更二：5#井通风井止水帷幕',wfQc,3,'',[mkRec(102,dStr(3),'按照燃气公司要求修改通风井保护方式，已上图','投资监理审核中','pending')],85.24),
         mkCat('c103','变更三：5#井槽壁加固',wfQc,3,'',[mkRec(103,dStr(3),'事项已认可已上图','投资监理审核中','pending')],77.84),
@@ -437,7 +440,8 @@ var DataManager = {
     xhr.send(JSON.stringify({ files: { 'kanban-data.json': { content: JSON.stringify(data, null, 2) } } }));
   },
   tryCloudLoad: function(callback) {
-    // 后台静默尝试加载云端更新（不影响显示）
+    // 后台静默尝试加载云端更新（版本不低于本地才接受，防止旧数据覆盖新结构）
+    var localVer = (window.appData && window.appData.version) || '0';
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://gist.githubusercontent.com/rexzhanghaifeng/' + GIST_ID + '/raw/kanban-data.json?t=' + Date.now(), true);
     xhr.onload = function() {
@@ -445,7 +449,13 @@ var DataManager = {
         try {
           var d = JSON.parse(xhr.responseText);
           if (d && d.projects && d.projects.length > 0) {
-            callback(d);
+            var cloudVer = d.version || '0';
+            if (cloudVer >= localVer) {
+              console.log('[Kanban] 云端 v' + cloudVer + ' >= 本地 v' + localVer + ' → 接受更新');
+              callback(d);
+            } else {
+              console.log('[Kanban] 云端 v' + cloudVer + ' < 本地 v' + localVer + ' → 忽略（避免旧数据覆盖）');
+            }
           }
         } catch(e) {}
       }
@@ -458,14 +468,20 @@ var DataManager = {
 function uid() { return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
 function truncate(str, n) { return str && str.length > n ? str.slice(0,n) + '…' : str; }
 function showToast(msg) {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 function currentProject() { return appData.projects[currentProjectIndex]; }
 function statusLabel(cat) {
   if(cat.currentStage >= cat.workflow.length-1) return 'done';
-  if(cat.blockingIssue && cat.blockingIssue.trim()) return 'block';
+  // 检查分类级堵点 或 项目级堵点
+  var projBlock = '';
+  try {
+    var proj = appData.projects[currentProjectIndex];
+    if(proj) projBlock = proj.projectBlockingIssue || '';
+  } catch(e){}
+  if((cat.blockingIssue && cat.blockingIssue.trim()) || (projBlock && projBlock.trim())) return 'block';
   return 'active';
 }
 
@@ -479,25 +495,25 @@ function switchProject(idx) {
 
 // ===================== RENDER OVERVIEW =====================
 function renderOverview() {
-  const grid = document.getElementById('overview-grid');
+  var grid = document.getElementById('overview-grid');
   grid.innerHTML = '';
   appData.projects.forEach((proj, idx) => {
-    const cats = proj.categories;
-    const total = cats.length;
-    const done = cats.filter(c => c.currentStage >= c.workflow.length-1).length;
-    const blocked = cats.filter(c => c.blockingIssue && c.blockingIssue.trim()).length;
-    const pct = total ? Math.round(done/total*100) : 0;
+    var cats = proj.categories;
+    var total = cats.length;
+    var done = cats.filter(c => c.currentStage >= c.workflow.length-1).length;
+    var blocked = cats.filter(c => c.blockingIssue && c.blockingIssue.trim()).length;
+    var pct = total ? Math.round(done/total*100) : 0;
 
     // 金额统计
-    const totalAmt = cats.reduce((s,c) => s + (Number(c.amount)||0), 0);
-    const doneAmt = cats.filter(c => c.currentStage >= c.workflow.length-1).reduce((s,c) => s + (Number(c.amount)||0), 0);
-    const amtPct = totalAmt ? Math.round(doneAmt/totalAmt*100) : 0;
+    var totalAmt = cats.reduce((s,c) => s + (Number(c.amount)||0), 0);
+    var doneAmt = cats.filter(c => c.currentStage >= c.workflow.length-1).reduce((s,c) => s + (Number(c.amount)||0), 0);
+    var amtPct = totalAmt ? Math.round(doneAmt/totalAmt*100) : 0;
 
-    const r = 26, circ = 2*Math.PI*r;
-    const dash = circ * pct / 100;
-    const amtDash = circ * amtPct / 100;
+    var r = 26, circ = 2*Math.PI*r;
+    var dash = circ * pct / 100;
+    var amtDash = circ * amtPct / 100;
 
-    const card = document.createElement('div');
+    var card = document.createElement('div');
     card.className = 'overview-card';
     card.onclick = () => switchProject(idx);
     card.innerHTML = `
@@ -537,11 +553,11 @@ function renderOverview() {
 
 // ===================== RENDER TABS =====================
 function renderTabs() {
-  const tabs = document.getElementById('project-tabs');
+  var tabs = document.getElementById('project-tabs');
   tabs.innerHTML = '';
   appData.projects.forEach((proj, idx) => {
-    const hasBlock = proj.categories.some(c => c.blockingIssue && c.blockingIssue.trim());
-    const btn = document.createElement('button');
+    var hasBlock = proj.categories.some(c => c.blockingIssue && c.blockingIssue.trim());
+    var btn = document.createElement('button');
     btn.className = 'tab-btn' + (idx===currentProjectIndex?' active':'') + (hasBlock?' has-block':'');
     btn.textContent = proj.name;
     btn.onclick = () => switchProject(idx);
@@ -551,43 +567,49 @@ function renderTabs() {
 
 // ===================== RENDER CATEGORIES =====================
 function renderCategories() {
-  const proj = currentProject();
+  var proj = currentProject();
   document.getElementById('section-title-text').textContent = `${proj.name} — 共 ${proj.categories.length} 个分类`;
-  const grid = document.getElementById('categories-grid');
+  var grid = document.getElementById('categories-grid');
   grid.innerHTML = '';
   if(!proj.categories.length) {
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📂</div><div class="empty-text">暂无分类，点击下方添加</div></div>`;
     return;
   }
   proj.categories.forEach(cat => {
-    const st = statusLabel(cat);
-    const card = document.createElement('div');
+    var st = statusLabel(cat);
+    var card = document.createElement('div');
     card.className = 'cat-card' + (st==='block'?' has-block':'') + (st==='done'?' is-done':'');
     card.onclick = () => openEditModal(proj.id, cat.id);
 
     // Step bar
-    const steps = cat.workflow;
-    let stepsHtml = '<div class="steps-row">';
+    var steps = cat.workflow;
+    var stepsHtml = '<div class="steps-row">';
     steps.forEach((s, i) => {
       if(i > 0) stepsHtml += `<div class="step-connector ${i<=cat.currentStage?'passed':''}${i===cat.currentStage?'current':''}"></div>`;
-      const cls = i < cat.currentStage ? 'passed' : i === cat.currentStage ? 'current' : 'future';
+      var cls = i < cat.currentStage ? 'passed' : i === cat.currentStage ? 'current' : 'future';
       stepsHtml += `<div class="step-dot-wrap"><div class="step-dot ${cls}" title="${s}"></div></div>`;
     });
     stepsHtml += '</div>';
-    const curLabel = steps[cat.currentStage] || '—';
+    var curLabel = steps[cat.currentStage] || '—';
 
     // Latest record
-    const recs = [...cat.records].sort((a,b) => b.date.localeCompare(a.date));
-    let latestHtml = recs.length
+    var recs = [...cat.records].sort((a,b) => b.date.localeCompare(a.date));
+    var latestHtml = recs.length
       ? `<div class="latest-record"><div class="lr-date">${recs[0].date}</div><div class="lr-content">${truncate(recs[0].content,60)}</div></div>`
       : `<div class="no-record">暂无推进记录</div>`;
 
-    // Block
-    const blockHtml = cat.blockingIssue ? `<div class="block-bar"><span class="block-label">⚠ 堵点</span>${cat.blockingIssue}</div>` : '';
+    // Block（优先分类级，其次项目级）
+    var blockHtml = '';
+    var projBlock = proj.projectBlockingIssue || '';
+    if (cat.blockingIssue) {
+      blockHtml = '<div class="block-bar"><span class="block-label">⚠ 堵点</span>' + cat.blockingIssue + '</div>';
+    } else if (projBlock) {
+      blockHtml = '<div class="block-bar" style="border-left-color:#90CAF9;background:#E3F2FD"><span class="block-label">⚠ 堵点（📋 项目）</span>' + projBlock + '</div>';
+    }
 
     // Badge
-    const badgeCls = st==='block'?'badge-block':st==='done'?'badge-done':'badge-active';
-    const badgeTxt = st==='block'?'有堵点':st==='done'?'已完成':'进行中';
+    var badgeCls = st==='block'?'badge-block':st==='done'?'badge-done':'badge-active';
+    var badgeTxt = st==='block'?'有堵点':st==='done'?'已完成':'进行中';
 
     card.innerHTML = `
       <div class="cat-card-header">
@@ -610,8 +632,8 @@ function render() {
 
 // ===================== OPEN EDIT MODAL =====================
 function openEditModal(projId, catId) {
-  const proj = appData.projects.find(p=>p.id===projId);
-  const cat = proj.categories.find(c=>c.id===catId);
+  var proj = appData.projects.find(p=>p.id===projId);
+  var cat = proj.categories.find(c=>c.id===catId);
   editingProjectId = projId;
   editingCatId = catId;
   // deep copy working state
@@ -626,86 +648,113 @@ function openEditModal(projId, catId) {
 }
 
 function renderModalBody() {
-  const cat = editState;
-  const steps = cat.workflow;
-  const recs = [...cat.records].sort((a,b) => b.date.localeCompare(a.date));
-  const today = new Date().toISOString().slice(0,10);
+  var cat = editState;
+  var steps = cat.workflow;
+  var recs = cat.records.slice().sort(function(a,b){return b.date.localeCompare(a.date);});
+  var today = new Date().toISOString().slice(0,10);
+  var proj = appData.projects[currentProjectIndex];
+  var projBlockVal = proj.projectBlockingIssue || '';
 
   // Stage selector
-  let stagesHtml = steps.map((s,i) => {
-    const sel = i===cat.currentStage;
-    const passed = i<cat.currentStage;
-    return `<div class="stage-item ${sel?'selected':''} ${passed?'passed':''}" onclick="selectStage(${i})">
-      <div class="stage-num">${i+1}</div>
-      <div class="stage-name">${s}</div>
-      ${sel?'<span class="stage-check">✓</span>':''}
-    </div>`;
+  var stagesHtml = steps.map(function(s,i){
+    var sel = i===cat.currentStage;
+    var passed = i<cat.currentStage;
+    return '<div class="stage-item '+(sel?'selected':'')+' '+(passed?'passed':'')+'" onclick="selectStage('+i+')">'
+      +'<div class="stage-num">'+(i+1)+'</div>'
+      +'<div class="stage-name">'+s+'</div>'
+      +(sel?'<span class="stage-check">✓</span>':'')
+      +'</div>';
   }).join('');
 
   // Workflow edit
-  let wfTagsHtml = steps.map((s,i) =>
-    `<span class="wf-tag">${s}<button class="wf-tag-del" onclick="removeWorkflowStep(${i})" title="删除此步骤">×</button></span>`
-  ).join('');
+  var wfTagsHtml = steps.map(function(s,i){
+    return '<span class="wf-tag">'+s+'<button class="wf-tag-del" onclick="removeWorkflowStep('+i+')" title="删除此步骤">×</button></span>';
+  }).join('');
 
   // Records
-  let recsHtml = recs.length ? recs.map(r => {
-    const statusMap = {pending:'⏳ 等待反馈', positive:'✅ 推进顺利', blocked:'🚫 受阻', none:'📝 仅记录'};
-    const statusCls = r.feedbackStatus || 'none';
-    return `<div class="record-item">
-      <div class="ri-date">${r.date}</div>
-      <div class="ri-content">${r.content || '—'}</div>
-      ${r.feedback ? `<div class="ri-feedback">${r.feedback}</div>` : ''}
-      <span class="ri-status ${statusCls}">${statusMap[statusCls]||statusCls}</span>
-      <button class="record-del-btn" onclick="deleteRecord('${r.id}')" title="删除记录">×</button>
-    </div>`;
+  var statusMap = {pending:'⏳ 等待反馈', positive:'✅ 推进顺利', blocked:'🚫 受阻', none:'📝 仅记录'};
+  var recsHtml = recs.length ? recs.map(function(r){
+    var sc = r.feedbackStatus || 'none';
+    return '<div class="record-item">'
+      +'<div class="ri-date">'+r.date+'</div>'
+      +'<div class="ri-content">'+(r.content||'—')+'</div>'
+      +(r.feedback?'<div class="ri-feedback">'+r.feedback+'</div>':'')
+      +'<span class="ri-status '+sc+'">'+(statusMap[sc]||sc)+'</span>'
+      +'<button class="record-del-btn" onclick="deleteRecord(\''+r.id+'\')" title="删除记录">×</button>'
+      +'</div>';
   }).join('') : '<div style="text-align:center;color:#aaa;font-size:13px;padding:10px">暂无推进记录</div>';
 
-  document.getElementById('modal-body').innerHTML = `
-    <div class="modal-section">
-      <div class="section-label">📍 审批进度 — 点击切换当前阶段</div>
-      <div class="stage-selector">${stagesHtml}</div>
-      <details style="margin-top:8px">
-        <summary style="font-size:11px;color:var(--primary);cursor:pointer;padding:4px 0">⚙ 自定义审批步骤</summary>
-        <div style="margin-top:8px;background:#F8F9FF;border-radius:8px;padding:10px">
-          <div class="workflow-edit-row" id="wf-tags-row">${wfTagsHtml}</div>
-          <div class="wf-add-row">
-            <input class="wf-add-input" id="wf-new-step" placeholder="输入新步骤名称">
-            <button class="wf-add-btn" onclick="addWorkflowStep()">添加</button>
-          </div>
-        </div>
-      </details>
-    </div>
+  // Build other categories checkboxes for batch
+  var otherCatsHtml = '';
+  proj.categories.forEach(function(c){
+    if(c.id === editingCatId) return;
+    otherCatsHtml += '<label style="display:block;padding:3px 0;font-size:13px;cursor:pointer">'
+      +'<input type="checkbox" class="batch-cb" value="'+c.id+'" style="margin-right:6px">'+c.name
+      +'</label>';
+  });
 
-    <div class="modal-section">
-      <div class="section-label">⚠ 堵点说明</div>
-      <textarea class="modal-textarea" id="block-input" placeholder="描述当前堵点（无堵点可留空）">${cat.blockingIssue||''}</textarea>
-    </div>
+  document.getElementById('modal-body').innerHTML =
+    // —— 项目堵点（顶部）——
+    '<div class="modal-section" style="background:#F0F7FF;border-radius:8px;padding:12px;margin-bottom:8px">'
+      +'<div class="section-label">📋 项目堵点（所有分类共通，留空则各分类独立）</div>'
+      +'<textarea class="modal-textarea" id="proj-block-input" placeholder="描述项目级堵点..." style="min-height:48px">'+projBlockVal+'</textarea>'
+    +'</div>'
+    // —— 审批进度 ——
+    +'<div class="modal-section">'
+      +'<div class="section-label">📍 审批进度 — 点击切换当前阶段</div>'
+      +'<div class="stage-selector">'+stagesHtml+'</div>'
+      +'<details style="margin-top:8px">'
+        +'<summary style="font-size:11px;color:var(--primary);cursor:pointer;padding:4px 0">⚙ 自定义审批步骤</summary>'
+        +'<div style="margin-top:8px;background:#F8F9FF;border-radius:8px;padding:10px">'
+          +'<div class="workflow-edit-row" id="wf-tags-row">'+wfTagsHtml+'</div>'
+          +'<div class="wf-add-row">'
+            +'<input class="wf-add-input" id="wf-new-step" placeholder="输入新步骤名称">'
+            +'<button class="wf-add-btn" onclick="addWorkflowStep()">添加</button>'
+          +'</div>'
+        +'</div>'
+      +'</details>'
+    +'</div>'
+    // —— 分类堵点 ——
+    +'<div class="modal-section">'
+      +'<div class="section-label">⚠ 分类堵点（覆盖项目堵点）</div>'
+      +'<textarea class="modal-textarea" id="block-input" placeholder="留空则继承项目堵点">'+(cat.blockingIssue||'')+'</textarea>'
+    +'</div>'
+    // —— 推进记录 ——
+    +'<div class="modal-section">'
+      +'<div class="section-label">📅 推进记录</div>'
+      +'<div class="record-list" id="record-list">'+recsHtml+'</div>'
+      +'<div class="add-record-form">'
+        +'<div class="form-title">＋ 添加推进记录</div>'
+        +'<div class="form-row"><label>日期</label><input class="form-input" type="date" id="rec-date" value="'+today+'"></div>'
+        +'<div class="form-row"><label>工作内容</label><textarea class="form-input" id="rec-content" rows="2" placeholder="描述本次推进的具体工作内容"></textarea></div>'
+        +'<div class="form-row"><label>反馈情况</label><textarea class="form-input" id="rec-feedback" rows="2" placeholder="对方反馈或当前状态"></textarea></div>'
+        +'<div class="form-row"><label>反馈状态</label>'
+          +'<select class="form-select" id="rec-status">'
+            +'<option value="pending">⏳ 进行中/等待反馈</option>'
+            +'<option value="positive">✅ 推进顺利</option>'
+            +'<option value="blocked">🚫 受阻/有问题</option>'
+            +'<option value="none">📝 仅记录</option>'
+          +'</select>'
+        +'</div>'
+        +'<label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--primary);cursor:pointer;margin-bottom:8px">'
+          +'<input type="checkbox" id="batch-check"> 📋 同时添加到其他分类'
+        +'</label>'
+        +'<div id="batch-cats" style="display:none;margin-bottom:8px;max-height:120px;overflow-y:auto;background:#F8F9FF;border-radius:8px;padding:8px">'+otherCatsHtml+'</div>'
+        +'<button class="add-rec-btn" onclick="addRecord()">添加记录</button>'
+      +'</div>'
+    +'</div>'
+    // —— 分类管理 ——
+    +'<div class="modal-section" style="border-top:1px dashed var(--border);padding-top:12px;margin-top:4px">'
+      +'<div class="section-label">⚙ 分类管理</div>'
+      +'<button class="del-cat-btn" onclick="confirmDeleteCat()">🗑 删除此分类</button>'
+    +'</div>';
 
-    <div class="modal-section">
-      <div class="section-label">📅 推进记录</div>
-      <div class="record-list" id="record-list">${recsHtml}</div>
-      <div class="add-record-form">
-        <div class="form-title">＋ 添加推进记录</div>
-        <div class="form-row"><label>日期</label><input class="form-input" type="date" id="rec-date" value="${today}"></div>
-        <div class="form-row"><label>工作内容</label><textarea class="form-input" id="rec-content" rows="2" placeholder="描述本次推进的具体工作内容"></textarea></div>
-        <div class="form-row"><label>反馈情况</label><textarea class="form-input" id="rec-feedback" rows="2" placeholder="对方反馈或当前状态"></textarea></div>
-        <div class="form-row"><label>反馈状态</label>
-          <select class="form-select" id="rec-status">
-            <option value="pending">⏳ 进行中/等待反馈</option>
-            <option value="positive">✅ 推进顺利</option>
-            <option value="blocked">🚫 受阻/有问题</option>
-            <option value="none">📝 仅记录</option>
-          </select>
-        </div>
-        <button class="add-rec-btn" onclick="addRecord()">添加记录</button>
-      </div>
-    </div>
-
-    <div class="modal-section" style="border-top:1px dashed var(--border);padding-top:12px;margin-top:4px">
-      <div class="section-label">⚙ 分类管理</div>
-      <button class="del-cat-btn" onclick="confirmDeleteCat()">🗑 删除此分类</button>
-    </div>
-  `;
+  // batch checkbox toggle
+  var batchCb = document.getElementById('batch-check');
+  var batchDiv = document.getElementById('batch-cats');
+  if(batchCb && batchDiv) {
+    batchCb.onchange = function(){ batchDiv.style.display = batchCb.checked?'block':'none'; };
+  }
 }
 
 function selectStage(idx) {
@@ -719,19 +768,39 @@ function deleteRecord(recId) {
 }
 
 function addRecord() {
-  const date = document.getElementById('rec-date').value;
-  const content = document.getElementById('rec-content').value.trim();
-  const feedback = document.getElementById('rec-feedback').value.trim();
-  const status = document.getElementById('rec-status').value;
+  var date = document.getElementById('rec-date').value;
+  var content = document.getElementById('rec-content').value.trim();
+  var feedback = document.getElementById('rec-feedback').value.trim();
+  var status = document.getElementById('rec-status').value;
   if(!date || !content) { showToast('请填写日期和工作内容'); return; }
-  editState.records.push({ id: uid(), date, content, feedback, feedbackStatus: status });
+
+  var rec = { id: uid(), date:date, content:content, feedback:feedback, feedbackStatus:status };
+
+  // 始终添加到当前分类
+  editState.records.push(rec);
+
+  // 批量：同时添加到其他选中分类
+  var batchCb = document.getElementById('batch-check');
+  if(batchCb && batchCb.checked) {
+    var proj = appData.projects[currentProjectIndex];
+    var cbs = document.getElementsByClassName('batch-cb');
+    for(var i=0; i<cbs.length; i++) {
+      if(cbs[i].checked) {
+        var tgt = proj.categories.find(function(c){ return c.id===cbs[i].value; });
+        if(tgt) tgt.records.push({ id:uid(), date:date, content:content, feedback:feedback, feedbackStatus:status });
+      }
+    }
+    DataManager.save(appData);
+    showToast('记录已添加到选中分类 ✓');
+  }
+
   renderModalBody();
-  showToast('记录已添加');
+  if(!batchCb || !batchCb.checked) showToast('记录已添加');
 }
 
 function addWorkflowStep() {
-  const inp = document.getElementById('wf-new-step');
-  const val = inp.value.trim();
+  var inp = document.getElementById('wf-new-step');
+  var val = inp.value.trim();
   if(!val) return;
   editState.workflow.push(val);
   inp.value = '';
@@ -757,6 +826,11 @@ function confirmDeleteCat() {
 }
 
 function saveModal() {
+  // 保存项目级堵点
+  var pbi = document.getElementById('proj-block-input');
+  if(pbi) appData.projects[currentProjectIndex].projectBlockingIssue = pbi.value.trim();
+
+  // 保存分类数据
   editState.blockingIssue = document.getElementById('block-input').value.trim();
   editState.updatedAt = new Date().toISOString();
 
@@ -789,7 +863,7 @@ function closeNameModal() {
   nmCallback = null;
 }
 function saveNameModal() {
-  const val = document.getElementById('nm-input').value.trim();
+  var val = document.getElementById('nm-input').value.trim();
   if(!val) { showToast('名称不能为空'); return; }
   if(nmCallback) nmCallback(val);
   closeNameModal();
@@ -829,10 +903,10 @@ function openWeeklyReport() {
 
 // ===================== EXPORT DATA =====================
 function exportData() {
-  const json = JSON.stringify(appData, null, 2);
-  const blob = new Blob([json], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  var json = JSON.stringify(appData, null, 2);
+  var blob = new Blob([json], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
   a.href = url;
   a.download = '结算看板备份_' + new Date().toISOString().slice(0,10) + '.json';
   a.click();
@@ -840,10 +914,21 @@ function exportData() {
   showToast('数据已导出');
 }
 
+// ===================== DATA MIGRATION =====================
+function migrateData(d) {
+  if(!d || !d.projects) return d;
+  d.version = d.version || "2.1";
+  d.projects.forEach(function(p){
+    if(p.projectBlockingIssue === undefined) p.projectBlockingIssue = '';
+  });
+  return d;
+}
+
 // ===================== INIT (同步，立即执行) =====================
 render();
 // 后台静默尝试加载云端更新（可选）
 DataManager.tryCloudLoad(function(cloudData) {
+  migrateData(cloudData);
   window.appData = cloudData;
   currentProjectIndex = cloudData.activeProjectIndex || 0;
   render();
