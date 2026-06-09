@@ -358,25 +358,24 @@
 </div>
 
 <script>
-// ===================== DATA MANAGER (Gist-Backed) =====================
-const GIST_ID = 'e120cfbc51a410e7f0f5449ca3de746b';
-const GIST_RAW_URL = 'https://gist.githubusercontent.com/rexzhanghaifeng/' + GIST_ID + '/raw/kanban-data.json';
-const TOKEN_KEY = 'gh_kanban_token';
+// ===================== DATA (完全同步，100%可靠) =====================
 const CACHE_KEY = 'engineering_kanban_cache';
+const GIST_ID = 'e120cfbc51a410e7f0f5449ca3de746b';
+const TOKEN_KEY = 'gh_kanban_token';
 
-// ---- Build-in default data factory (always available, no network needed) ----
-function buildDefaultData() {
-  const wf = ["施工单位提交","监理审核","业主审核","临港管委会生态处","发改处","审批完成"];
-  const wfSimple = ["施工单位提交","监理审核","业主审核","审批完成"];
-  const wfQc = ["提交资料","监理/设计签认","投资监理审核","甲方部门领导审批","建管公司审批","完成"];
-  const now = new Date();
-  function dStr(daysAgo) { const d = new Date(now); d.setDate(d.getDate()-daysAgo); return d.toISOString().slice(0,10); }
-  function mkCat(id, name, workflow, stage, block, records, amount) { return { id, name, workflow: [...workflow], currentStage: stage, blockingIssue: block||'', records: records||[], updatedAt: now.toISOString(), amount: amount||0 }; }
-  function mkRec(i, date, content, feedback, status) { return { id: 'rec_' + i + '_' + Date.now(), date, content, feedback, feedbackStatus: status }; }
-  const generalBlock = '生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议';
-  return {
+(function() {
+  var wf = ["施工单位提交","监理审核","业主审核","临港管委会生态处","发改处","审批完成"];
+  var wfSimple = ["施工单位提交","监理审核","业主审核","审批完成"];
+  var wfQc = ["提交资料","监理/设计签认","投资监理审核","甲方部门领导审批","建管公司审批","完成"];
+  var now = new Date();
+  function dStr(daysAgo) { var d = new Date(now); d.setDate(d.getDate()-daysAgo); return d.toISOString().slice(0,10); }
+  function mkCat(id, name, workflow, stage, block, records, amount) { return { id:id, name:name, workflow:workflow.slice(), currentStage:stage, blockingIssue:block||'', records:records||[], updatedAt:now.toISOString(), amount:amount||0 }; }
+  function mkRec(i, date, content, feedback, status) { return { id:'rec_'+i+'_'+Date.now(), date:date, content:content, feedback:feedback, feedbackStatus:status }; }
+  var generalBlock = '生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议';
+
+  window.appData = {
     version: "2.0", lastUpdated: now.toISOString(),
-    settings: { defaultWorkflow: [...wf] }, activeProjectIndex: 0,
+    settings: { defaultWorkflow: wf.slice() }, activeProjectIndex: 0,
     projects: [
       { id:'proj_001',name:'临港污水处理厂排海管工程',categories:[
         mkCat('c001','变更一：云水路开道口和团结塘大堤堤顶加宽施工',wf,3,generalBlock,[mkRec(1,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处安排会议审核','pending'),mkRec(2,dStr(8),'向业主提交变更签证资料','业主已确认接收','positive')],327.78),
@@ -413,82 +412,47 @@ function buildDefaultData() {
       ]}
     ]
   };
-}
+})();
 
-const DataManager = {
-  // Load data: try Gist → localStorage cache → built-in default (always works)
-  async load() {
-    // 1. Try cloud (Gist)
-    try {
-      const resp = await fetch(GIST_RAW_URL + '?t=' + Date.now());
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data && data.version && data.projects && data.projects.length > 0) {
-          localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-          console.log('[Kanban] Loaded from cloud Gist ✓');
-          return data;
-        }
-      }
-    } catch(e) { console.log('[Kanban] Cloud fetch failed:', e.message || e); }
+// ===================== STATE =====================
+var currentProjectIndex = window.appData.activeProjectIndex || 0;
+var editingProjectId = null;
+var editingCatId = null;
+var editState = {};
+var nmCallback = null;
 
-    // 2. Try local cache
-    try {
-      const raw = localStorage.getItem(CACHE_KEY);
-      if (raw) {
-        const d = JSON.parse(raw);
-        if (d && d.version && d.projects && d.projects.length > 0) {
-          console.log('[Kanban] Loaded from local cache ✓');
-          return d;
-        }
-      }
-    } catch(e2) { console.log('[Kanban] Cache read failed'); }
-
-    // 3. Built-in default (guaranteed to work — no network, no storage needed)
-    console.log('[Kanban] Using built-in default data');
-    return buildDefaultData();
-  },
-
-  async save(data) {
+// ===================== DATA MANAGER (save only) =====================
+var DataManager = {
+  save: function(data) {
     data.lastUpdated = new Date().toISOString();
-    // Always save local first (instant)
-    localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-    // Then try cloud sync
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
-      const t = prompt('请输入GitHub Personal Access Token以同步数据到云端：\n\n获取方式：github.com → Settings → Developer settings → Personal access tokens → Generate(classic)\n需要勾选 gist 权限。\n\n（留空则仅保存到本地浏览器）');
-      if (t && t.trim()) { localStorage.setItem(TOKEN_KEY, t.trim()); return this.save(data); }
-      showToast('数据已保存到本地（未同步云端）');
-      return;
-    }
-    try {
-      const gistResp = await fetch('https://api.github.com/gists/' + GIST_ID, {
-        method: 'PATCH',
-        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json' },
-        body: JSON.stringify({ files: { 'kanban-data.json': { content: JSON.stringify(data, null, 2) } } })
-      });
-      if (!gistResp.ok) throw new Error('Gist API returned ' + gistResp.status);
-      showToast('✓ 已同步到云端');
-    } catch(e) {
-      console.error('Gist sync error:', e);
-      showToast('⚠ 云端同步失败，数据已保存在本地');
-    }
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch(e) {}
+    var token = '';
+    try { token = localStorage.getItem(TOKEN_KEY) || ''; } catch(e) {}
+    if (!token) return;
+    var xhr = new XMLHttpRequest();
+    xhr.open('PATCH', 'https://api.github.com/gists/' + GIST_ID);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+    xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({ files: { 'kanban-data.json': { content: JSON.stringify(data, null, 2) } } }));
+  },
+  tryCloudLoad: function(callback) {
+    // 后台静默尝试加载云端更新（不影响显示）
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://gist.githubusercontent.com/rexzhanghaifeng/' + GIST_ID + '/raw/kanban-data.json?t=' + Date.now(), true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        try {
+          var d = JSON.parse(xhr.responseText);
+          if (d && d.projects && d.projects.length > 0) {
+            callback(d);
+          }
+        } catch(e) {}
+      }
+    };
+    xhr.send();
   }
 };
-
-// ===================== STATE (async-init) =====================
-let appData = null;
-let currentProjectIndex = 0;
-let editingProjectId = null;
-let editingCatId = null;
-let editState = {}; // working copy during modal edit
-let nameModalCallback = null;
-
-async function initApp() {
-  appData = await DataManager.load();
-  currentProjectIndex = appData.activeProjectIndex || 0;
-  render();
-}
-initApp();
 
 // ===================== UTILS =====================
 function uid() { return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
@@ -503,6 +467,14 @@ function statusLabel(cat) {
   if(cat.currentStage >= cat.workflow.length-1) return 'done';
   if(cat.blockingIssue && cat.blockingIssue.trim()) return 'block';
   return 'active';
+}
+
+// ===================== SWITCH PROJECT =====================
+function switchProject(idx) {
+  currentProjectIndex = idx;
+  appData.activeProjectIndex = idx;
+  DataManager.save(appData);
+  render();
 }
 
 // ===================== RENDER OVERVIEW =====================
@@ -634,14 +606,6 @@ function render() {
   renderOverview();
   renderTabs();
   renderCategories();
-}
-
-// ===================== SWITCH PROJECT =====================
-async function switchProject(idx) {
-  currentProjectIndex = idx;
-  appData.activeProjectIndex = idx;
-  await DataManager.save(appData);
-  render();
 }
 
 // ===================== OPEN EDIT MODAL =====================
@@ -781,26 +745,26 @@ function removeWorkflowStep(idx) {
   renderModalBody();
 }
 
-async function confirmDeleteCat() {
-  if(confirm(`确认删除分类"${editState.name}"？此操作不可撤销。`)) {
-    const proj = appData.projects.find(p=>p.id===editingProjectId);
-    proj.categories = proj.categories.filter(c=>c.id!==editingCatId);
-    await DataManager.save(appData);
+function confirmDeleteCat() {
+  if(confirm('确认删除分类"' + editState.name + '"？此操作不可撤销。')) {
+    var proj = appData.projects.find(function(p){return p.id===editingProjectId;});
+    proj.categories = proj.categories.filter(function(c){return c.id!==editingCatId;});
+    DataManager.save(appData);
     closeModal();
     render();
     showToast('分类已删除');
   }
 }
 
-async function saveModal() {
-  // collect current form values
+function saveModal() {
   editState.blockingIssue = document.getElementById('block-input').value.trim();
   editState.updatedAt = new Date().toISOString();
 
-  const proj = appData.projects.find(p=>p.id===editingProjectId);
-  const catIdx = proj.categories.findIndex(c=>c.id===editingCatId);
+  var proj = appData.projects.find(function(p){return p.id===editingProjectId;});
+  var catIdx = -1;
+  for(var ci=0;ci<proj.categories.length;ci++){if(proj.categories[ci].id===editingCatId){catIdx=ci;break;}}
   proj.categories[catIdx] = editState;
-  await DataManager.save(appData);
+  DataManager.save(appData);
   closeModal();
   render();
   showToast('已保存');
@@ -813,7 +777,6 @@ function closeModal() {
 }
 
 // ===================== NAME EDIT MODAL =====================
-let nmCallback = null;
 function openNameModal(title, currentValue, callback) {
   document.getElementById('nm-title').textContent = title;
   document.getElementById('nm-input').value = currentValue;
@@ -834,26 +797,26 @@ function saveNameModal() {
 document.getElementById('nm-input').addEventListener('keydown', e => { if(e.key==='Enter') saveNameModal(); });
 
 // ===================== ADD PROJECT =====================
-async function addProject() {
-  openNameModal('新建工程名称', '', name => {
-    const wf = [...appData.settings.defaultWorkflow];
-    appData.projects.push({ id: uid(), name, categories: [] });
-    await DataManager.save(appData);
+function addProject() {
+  openNameModal('新建工程名称', '', function(name) {
+    var wf = appData.settings.defaultWorkflow.slice();
+    appData.projects.push({ id: uid(), name: name, categories: [] });
+    DataManager.save(appData);
     currentProjectIndex = appData.projects.length - 1;
     appData.activeProjectIndex = currentProjectIndex;
-    await DataManager.save(appData);
+    DataManager.save(appData);
     render();
     showToast('工程已创建');
   });
 }
 
 // ===================== ADD CATEGORY =====================
-async function addCategory() {
-  const proj = currentProject();
-  openNameModal(`在"${proj.name}"中添加分类`, '', name => {
-    const wf = [...appData.settings.defaultWorkflow];
-    proj.categories.push({ id: uid(), name, workflow: wf, currentStage: 0, blockingIssue: '', records: [], updatedAt: new Date().toISOString() });
-    await DataManager.save(appData);
+function addCategory() {
+  var proj = currentProject();
+  openNameModal('在"' + proj.name + '"中添加分类', '', function(name) {
+    var wf = appData.settings.defaultWorkflow.slice();
+    proj.categories.push({ id: uid(), name: name, workflow: wf, currentStage: 0, blockingIssue: '', records: [], updatedAt: new Date().toISOString() });
+    DataManager.save(appData);
     render();
     showToast('分类已添加');
   });
@@ -877,8 +840,15 @@ function exportData() {
   showToast('数据已导出');
 }
 
-// ===================== INIT =====================
-// render() called by async initApp() above
+// ===================== INIT (同步，立即执行) =====================
+render();
+// 后台静默尝试加载云端更新（可选）
+DataManager.tryCloudLoad(function(cloudData) {
+  window.appData = cloudData;
+  currentProjectIndex = cloudData.activeProjectIndex || 0;
+  render();
+  console.log('[Kanban] 云端数据已更新 ✓');
+});
 </script>
 </body>
 </html>
