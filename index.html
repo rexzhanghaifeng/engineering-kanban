@@ -428,39 +428,113 @@ var nmCallback = null;
 var DataManager = {
   save: function(data) {
     data.lastUpdated = new Date().toISOString();
+    // 1. 始终先存本地（瞬间完成）
     try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch(e) {}
+
+    // 2. 取 token
     var token = '';
     try { token = localStorage.getItem(TOKEN_KEY) || ''; } catch(e) {}
-    if (!token) return;
+
+    // 3. 没有 token → 弹出输入框
+    if (!token) {
+      token = prompt(
+        '请输入 GitHub Token 以同步数据到云端（读取不需要）\n\n' +
+        '请输入 GitHub Token（以 gho_ 开头）：\n' +
+        '（直接粘贴上面这串，或留空仅保存到本地）'
+      );
+      if (token && token.trim()) {
+        localStorage.setItem(TOKEN_KEY, token.trim());
+      } else {
+        showToast('数据已保存到本地浏览器（未同步云端）');
+        return;
+      }
+    }
+
+    // 4. 推送到 Gist
     var xhr = new XMLHttpRequest();
     xhr.open('PATCH', 'https://api.github.com/gists/' + GIST_ID);
     xhr.setRequestHeader('Authorization', 'Bearer ' + token);
     xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
     xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        showToast('✓ 已同步到云端');
+      } else {
+        showToast('⚠ 云端同步失败（' + xhr.status + '），数据已保存在本地');
+        console.error('[Kanban] Gist sync failed:', xhr.status, xhr.responseText);
+      }
+    };
+    xhr.onerror = function() { showToast('⚠ 网络错误，数据已保存在本地'); };
     xhr.send(JSON.stringify({ files: { 'kanban-data.json': { content: JSON.stringify(data, null, 2) } } }));
   },
   tryCloudLoad: function(callback) {
-    // 后台静默尝试加载云端更新（版本不低于本地才接受，防止旧数据覆盖新结构）
-    var localVer = (window.appData && window.appData.version) || '0';
+    // 后台静默尝试加载云端更新
+    // 校验：版本号不低于本地 AND 数据时间戳比本地新
+    var localData = null;
+    try { localData = JSON.parse(localStorage.getItem(CACHE_KEY)); } catch(e) {}
+    var localVer = (localData && localData.version) || (window.appData && window.appData.version) || '0';
+    var localUpdated = (localData && localData.lastUpdated) || (window.appData && window.appData.lastUpdated) || '';
+
+    // 优先用 GitHub API（实时，无 CDN 缓存）
+    var token = '';
+    try { token = localStorage.getItem(TOKEN_KEY) || ''; } catch(e) {}
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://gist.githubusercontent.com/rexzhanghaifeng/' + GIST_ID + '/raw/kanban-data.json?t=' + Date.now(), true);
+    xhr.open('GET', 'https://api.github.com/gists/' + GIST_ID + '?t=' + Date.now(), true);
+    xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+    if (token) xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+
     xhr.onload = function() {
       if (xhr.status === 200) {
         try {
-          var d = JSON.parse(xhr.responseText);
+          var gist = JSON.parse(xhr.responseText);
+          var content = gist.files && gist.files['kanban-data.json'] && gist.files['kanban-data.json'].content;
+          if (!content) return fallbackToCDN();
+          var d = JSON.parse(content);
           if (d && d.projects && d.projects.length > 0) {
             var cloudVer = d.version || '0';
-            if (cloudVer >= localVer) {
-              console.log('[Kanban] 云端 v' + cloudVer + ' >= 本地 v' + localVer + ' → 接受更新');
+            var cloudUpdated = d.lastUpdated || '';
+            var verOk = cloudVer >= localVer;
+            var timeOk = !localUpdated || (cloudUpdated > localUpdated);
+            if (verOk && timeOk) {
+              console.log('[Kanban] API 云端 v' + cloudVer + ' [' + cloudUpdated + '] > 本地 [' + localUpdated + '] → 接受更新');
               callback(d);
             } else {
-              console.log('[Kanban] 云端 v' + cloudVer + ' < 本地 v' + localVer + ' → 忽略（避免旧数据覆盖）');
+              console.log('[Kanban] 云端数据不比本地新 → 忽略');
             }
           }
-        } catch(e) {}
+        } catch(e) { fallbackToCDN(); }
+      } else {
+        fallbackToCDN();
       }
     };
+    xhr.onerror = function() { fallbackToCDN(); };
     xhr.send();
+
+    function fallbackToCDN() {
+      console.log('[Kanban] API 失败，回退到 CDN...');
+      var xhr2 = new XMLHttpRequest();
+      xhr2.open('GET', 'https://gist.githubusercontent.com/rexzhanghaifeng/' + GIST_ID + '/raw/kanban-data.json?t=' + Date.now() + '&r=' + Math.random(), true);
+      xhr2.onload = function() {
+        if (xhr2.status === 200) {
+          try {
+            var d = JSON.parse(xhr2.responseText);
+            if (d && d.projects && d.projects.length > 0) {
+              var cloudVer = d.version || '0';
+              var cloudUpdated = d.lastUpdated || '';
+              var verOk = cloudVer >= localVer;
+              var timeOk = !localUpdated || (cloudUpdated > localUpdated);
+              if (verOk && timeOk) {
+                console.log('[Kanban] CDN 云端 v' + cloudVer + ' [' + cloudUpdated + '] > 本地 [' + localUpdated + '] → 接受更新');
+                callback(d);
+              } else {
+                console.log('[Kanban] CDN 云端数据不比本地新 → 忽略');
+              }
+            }
+          } catch(e) {}
+        }
+      };
+      xhr2.send();
+    }
   }
 };
 
@@ -598,13 +672,15 @@ function renderCategories() {
       ? `<div class="latest-record"><div class="lr-date">${recs[0].date}</div><div class="lr-content">${truncate(recs[0].content,60)}</div></div>`
       : `<div class="no-record">暂无推进记录</div>`;
 
-    // Block（优先分类级，其次项目级）
+    // Block（优先分类级，其次项目级）— 已完成的分类不显示堵点
     var blockHtml = '';
-    var projBlock = proj.projectBlockingIssue || '';
-    if (cat.blockingIssue) {
-      blockHtml = '<div class="block-bar"><span class="block-label">⚠ 堵点</span>' + cat.blockingIssue + '</div>';
-    } else if (projBlock) {
-      blockHtml = '<div class="block-bar" style="border-left-color:#90CAF9;background:#E3F2FD"><span class="block-label">⚠ 堵点（📋 项目）</span>' + projBlock + '</div>';
+    if (st !== 'done') {
+      var projBlock = proj.projectBlockingIssue || '';
+      if (cat.blockingIssue) {
+        blockHtml = '<div class="block-bar"><span class="block-label">⚠ 堵点</span>' + cat.blockingIssue + '</div>';
+      } else if (projBlock) {
+        blockHtml = '<div class="block-bar" style="border-left-color:#90CAF9;background:#E3F2FD"><span class="block-label">⚠ 堵点（📋 项目）</span>' + projBlock + '</div>';
+      }
     }
 
     // Badge
@@ -925,12 +1001,29 @@ function migrateData(d) {
 }
 
 // ===================== INIT (同步，立即执行) =====================
+// 1. 优先从 localStorage 恢复（用户上次保存的数据）
+(function initFromCache() {
+  try {
+    var cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      var d = JSON.parse(cached);
+      if (d && d.projects && d.projects.length > 0) {
+        window.appData = d;
+        currentProjectIndex = d.activeProjectIndex || 0;
+        console.log('[Kanban] 已从本地缓存恢复 v' + (d.version||'?') + ' [' + (d.lastUpdated||'?') + ']');
+      }
+    }
+  } catch(e) { console.error('[Kanban] 读取本地缓存失败', e); }
+})();
+
 render();
-// 后台静默尝试加载云端更新（可选）
+// 2. 后台静默尝试加载云端更新（可选）
 DataManager.tryCloudLoad(function(cloudData) {
   migrateData(cloudData);
   window.appData = cloudData;
   currentProjectIndex = cloudData.activeProjectIndex || 0;
+  // 云端数据比本地新，持久化到 localStorage
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(cloudData)); } catch(e) {}
   render();
   console.log('[Kanban] 云端数据已更新 ✓');
 });
