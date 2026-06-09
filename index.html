@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>工程结算管理看板</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --primary: #1565C0;
+    --primary-light: #2196F3;
+    --active: #0288D1;
+    --success: #2E7D32;
+    --warning: #E65100;
+    --warning-bg: #FFF3E0;
+    --bg: #F5F6FA;
+    --card: #FFFFFF;
+    --text: #1A1A2E;
+    --text2: #555;
+    --text3: #888;
+    --border: #E0E4EF;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  body { background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+
+  /* ===== HEADER ===== */
+  #app-header {
+    background: var(--primary);
+    color: #fff;
+    padding: 14px 16px 12px;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(21,101,192,0.3);
+  }
+  #app-header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.5px; }
+  #app-header .header-actions { display: flex; gap: 8px; }
+  .header-btn {
+    background: rgba(255,255,255,0.2); border: none; color: #fff;
+    padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .header-btn:active { background: rgba(255,255,255,0.35); }
+
+  /* ===== OVERVIEW ===== */
+  #overview-section { padding: 16px 16px 8px; }
+  .overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .overview-card {
+    background: var(--card); border-radius: var(--radius); padding: 14px 12px;
+    box-shadow: var(--shadow); cursor: pointer; transition: transform 0.15s;
+  }
+  .overview-card:active { transform: scale(0.98); }
+  .ov-title { font-size: 12px; color: var(--text3); margin-bottom: 8px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ov-ring-row { display: flex; align-items: center; gap: 6px; justify-content: center; flex-wrap: wrap; }
+  .ov-ring-wrap { flex-shrink: 0; text-align: center; }
+  .ov-ring-label { font-size: 9px; color: var(--text3); margin-top: 2px; font-weight: 600; }
+  .ov-stats .stat-line { margin-bottom: 3px; display: flex; align-items: center; gap: 5px; }
+  .stat-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ===== TABS ===== */
+  #project-tabs { padding: 8px 16px 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  #project-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    white-space: nowrap; padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 600;
+    border: 2px solid var(--border); background: var(--card); color: var(--text3);
+    cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+  }
+  .tab-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .tab-btn.has-block { border-color: var(--warning); }
+
+  /* ===== CATEGORIES GRID ===== */
+  #categories-section { padding: 12px 16px; }
+  .section-title { font-size: 13px; color: var(--text3); font-weight: 500; margin-bottom: 10px; padding-left: 2px; }
+  .categories-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  @media (min-width: 600px) { .categories-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 900px) { .categories-grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+  /* ===== CATEGORY CARD ===== */
+  .cat-card {
+    background: var(--card); border-radius: var(--radius); padding: 14px 14px 10px;
+    box-shadow: var(--shadow); cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+    border: 1.5px solid transparent; position: relative; overflow: hidden;
+  }
+  .cat-card:active { transform: scale(0.985); box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
+  .cat-card.has-block { border-color: #FFCCBC; }
+  .cat-card.is-done { border-color: #A5D6A7; background: #E8F5E9; }
+  .cat-card.is-done .step-dot.passed { background: #66BB6A; border-color: #66BB6A; }
+  .cat-card.is-done .step-dot.current { background: #2E7D32; border-color: #2E7D32; box-shadow: 0 0 0 4px rgba(46,125,50,0.22); }
+  .cat-card.is-done .step-connector.passed { background: #66BB6A; }
+  .cat-card.is-done .current-stage-label { color: #2E7D32; }
+  .cat-card.is-done .latest-record { background: #F1F8E9; }
+
+  .cat-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .cat-name { font-size: 15px; font-weight: 700; color: var(--text); flex: 1; }
+  .status-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; margin-left: 8px;
+  }
+  .badge-block { background: #FFE0B2; color: var(--warning); }
+  .badge-done { background: #C8E6C9; color: var(--success); }
+  .badge-active { background: #BBDEFB; color: var(--primary); }
+
+  /* Step bar */
+  .step-bar { margin-bottom: 8px; }
+  .steps-row { display: flex; align-items: center; }
+  .step-dot-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; }
+  .step-dot {
+    width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--border);
+    background: #fff; position: relative; transition: all 0.2s;
+  }
+  .step-dot.passed { background: #B0BEC5; border-color: #B0BEC5; }
+  .step-dot.current {
+    background: var(--primary-light); border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px rgba(33,150,243,0.22);
+    width: 13px; height: 13px;
+  }
+  .step-dot.future { background: #fff; border-color: var(--border); }
+  .step-connector { flex: 1; height: 2px; background: var(--border); }
+  .step-connector.passed { background: #B0BEC5; }
+  .step-connector.current { background: linear-gradient(to right, #B0BEC5, var(--primary-light)); }
+  .current-stage-label { font-size: 11px; color: var(--primary); font-weight: 600; margin-top: 4px; }
+
+  /* Latest record */
+  .latest-record { background: #F8F9FF; border-radius: 7px; padding: 8px 10px; margin-top: 6px; }
+  .lr-date { font-size: 10px; color: var(--text3); margin-bottom: 2px; }
+  .lr-content { font-size: 12px; color: var(--text2); line-height: 1.5; }
+  .no-record { font-size: 11px; color: var(--text3); text-align: center; padding: 6px 0; }
+
+  /* Blocking issue */
+  .block-bar {
+    background: #FFF3E0; border-left: 3px solid var(--warning);
+    border-radius: 0 5px 5px 0; padding: 6px 10px; margin-top: 8px;
+    font-size: 11px; color: var(--warning); line-height: 1.5;
+  }
+  .block-label { font-weight: 700; font-size: 10px; display: block; margin-bottom: 1px; }
+
+  /* ===== FOOTER BAR ===== */
+  #footer-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: var(--card); padding: 10px 16px 14px;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.1);
+    display: flex; gap: 10px;
+  }
+  .footer-btn {
+    flex: 1; height: 46px; border-radius: 23px; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+  }
+  .footer-btn:active { opacity: 0.8; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-secondary { background: var(--bg); color: var(--primary); border: 2px solid var(--primary); }
+
+  /* ===== BOTTOM SHEET MODAL ===== */
+  #modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+    opacity: 0; visibility: hidden; transition: all 0.3s; backdrop-filter: blur(2px);
+  }
+  #modal-overlay.open { opacity: 1; visibility: visible; }
+  #edit-modal {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 201;
+    background: var(--card); border-radius: 20px 20px 0 0;
+    max-height: 92vh; overflow-y: auto; overscroll-behavior: contain;
+    transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.32,0.72,0,1);
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+  #edit-modal.open { transform: translateY(0); }
+  .modal-handle { width: 36px; height: 4px; background: #DDD; border-radius: 2px; margin: 12px auto 0; }
+  .modal-header { padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .modal-title { font-size: 17px; font-weight: 700; color: var(--text); }
+  .modal-close { width: 30px; height: 30px; border-radius: 15px; background: var(--bg); border: none; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text3); }
+  .modal-body { padding: 0 16px 16px; }
+
+  .modal-section { margin-top: 16px; }
+  .section-label { font-size: 12px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+
+  /* Stage selector in modal */
+  .stage-selector { display: flex; flex-direction: column; gap: 0; }
+  .stage-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer;
+    margin-bottom: 6px; transition: all 0.15s; background: #fff;
+  }
+  .stage-item:active { background: #F0F4FF; }
+  .stage-item.selected { border-color: var(--primary-light); background: #E3F2FD; }
+  .stage-num { width: 26px; height: 26px; border-radius: 13px; background: var(--border); color: var(--text3); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .stage-item.selected .stage-num { background: var(--primary-light); color: #fff; }
+  .stage-item.passed .stage-num { background: #B0BEC5; color: #fff; }
+  .stage-name { font-size: 14px; font-weight: 500; }
+  .stage-check { margin-left: auto; color: var(--primary-light); font-size: 18px; }
+
+  /* Blocking textarea */
+  .modal-textarea {
+    width: 100%; min-height: 72px; border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+    color: var(--text); resize: vertical; outline: none;
+    transition: border-color 0.2s;
+  }
+  .modal-textarea:focus { border-color: var(--primary-light); }
+
+  /* Records timeline */
+  .record-list { margin-bottom: 12px; }
+  .record-item { border-left: 3px solid var(--border); padding: 8px 0 8px 14px; margin-bottom: 6px; position: relative; }
+  .record-item .ri-date { font-size: 10px; color: var(--text3); font-weight: 600; margin-bottom: 3px; }
+  .record-item .ri-content { font-size: 13px; color: var(--text); line-height: 1.5; margin-bottom: 3px; }
+  .record-item .ri-feedback { font-size: 12px; line-height: 1.4; margin-bottom: 3px; }
+  .ri-status { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 9px; }
+  .ri-status.pending { background: #FFF8E1; color: #F57F17; }
+  .ri-status.positive { background: #E8F5E9; color: #2E7D32; }
+  .ri-status.blocked { background: #FBE9E7; color: var(--warning); }
+  .ri-status.none { background: #EEE; color: #777; }
+  .record-del-btn { position: absolute; right: 0; top: 8px; width: 22px; height: 22px; border-radius: 11px; background: #FBE9E7; border: none; color: var(--warning); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+  /* Add record form */
+  .add-record-form { background: #F8F9FF; border-radius: 10px; padding: 12px; border: 1.5px solid #E8EEFF; }
+  .add-record-form .form-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+  .form-row { margin-bottom: 8px; }
+  .form-row label { font-size: 11px; color: var(--text3); display: block; margin-bottom: 4px; font-weight: 600; }
+  .form-input {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 7px;
+    padding: 8px 10px; font-size: 13px; font-family: inherit; color: var(--text);
+    background: #fff; outline: none; transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--primary-light); }
+  .form-select {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 7px;
+    padding: 8px 10px; font-size: 13px; font-family: inherit; color: var(--text);
+    background: #fff; outline: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+  }
+  .add-rec-btn {
+    width: 100%; height: 38px; background: var(--primary); color: #fff;
+    border: none; border-radius: 7px; font-size: 14px; font-weight: 700; cursor: pointer;
+    margin-top: 8px; transition: opacity 0.2s;
+  }
+  .add-rec-btn:active { opacity: 0.8; }
+
+  /* Modal footer buttons */
+  .modal-footer { padding: 12px 16px 8px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
+  .mf-btn { flex: 1; height: 44px; border-radius: 10px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; }
+  .mf-btn:active { opacity: 0.8; }
+  .mf-cancel { background: var(--bg); color: var(--text3); }
+  .mf-save { background: var(--primary); color: #fff; }
+
+  /* Name edit modal */
+  #name-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300;
+    opacity: 0; visibility: hidden; transition: all 0.2s; display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  #name-modal-overlay.open { opacity: 1; visibility: visible; }
+  .name-modal-card { background: #fff; border-radius: 16px; padding: 20px; width: 100%; max-width: 360px; }
+  .nm-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+  .nm-input { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+  .nm-input:focus { border-color: var(--primary-light); }
+  .nm-btns { display: flex; gap: 8px; margin-top: 14px; }
+  .nm-cancel { flex: 1; height: 40px; border: 1.5px solid var(--border); background: #fff; color: var(--text3); border-radius: 8px; font-size: 14px; cursor: pointer; }
+  .nm-save { flex: 1; height: 40px; background: var(--primary); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+
+  /* Edit name icon */
+  .edit-icon { font-size: 11px; color: var(--text3); margin-left: 4px; cursor: pointer; vertical-align: middle; }
+
+  /* Empty state */
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text3); }
+  .empty-icon { font-size: 40px; margin-bottom: 10px; }
+  .empty-text { font-size: 14px; }
+
+  /* Add category button */
+  .add-cat-btn {
+    width: 100%; height: 48px; border: 2px dashed var(--border); background: transparent;
+    border-radius: var(--radius); font-size: 14px; color: var(--text3);
+    cursor: pointer; margin-top: 6px; transition: all 0.2s;
+  }
+  .add-cat-btn:active { background: var(--bg); }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: rgba(0,0,0,0.8); color: #fff; padding: 8px 18px; border-radius: 20px;
+    font-size: 13px; z-index: 500; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Workflow edit mini section */
+  .workflow-edit-row { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+  .wf-tag { background: #E3F2FD; color: var(--primary); border-radius: 4px; padding: 2px 7px; font-size: 11px; display: flex; align-items: center; gap: 4px; }
+  .wf-tag-del { background: none; border: none; color: var(--warning); cursor: pointer; font-size: 13px; padding: 0; line-height: 1; }
+  .wf-add-row { display: flex; gap: 6px; }
+  .wf-add-input { flex: 1; border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 12px; font-family: inherit; outline: none; }
+  .wf-add-btn { background: var(--primary); color: #fff; border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; }
+
+  /* Delete category */
+  .del-cat-btn { color: var(--warning); background: #FBE9E7; border: none; border-radius: 6px; padding: 5px 10px; font-size: 11px; cursor: pointer; margin-top: 12px; }
+
+  /* Scrollbar */
+  #edit-modal::-webkit-scrollbar { width: 3px; }
+  #edit-modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="app-header">
+  <h1>📋 工程结算看板</h1>
+  <div class="header-actions">
+    <button class="header-btn" onclick="addProject()">+ 工程</button>
+  </div>
+</header>
+
+<!-- OVERVIEW -->
+<section id="overview-section">
+  <div class="overview-grid" id="overview-grid"></div>
+</section>
+
+<!-- TABS -->
+<div id="project-tabs"></div>
+
+<!-- CATEGORIES -->
+<section id="categories-section">
+  <div class="section-title" id="section-title-text">分类列表</div>
+  <div class="categories-grid" id="categories-grid"></div>
+  <button class="add-cat-btn" onclick="addCategory()">＋ 添加分类</button>
+</section>
+
+<!-- FOOTER -->
+<div id="footer-bar">
+  <button class="footer-btn btn-secondary" onclick="openWeeklyReport()">📊 生成本周周报</button>
+  <button class="footer-btn btn-primary" onclick="exportData()">💾 备份数据</button>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MODAL OVERLAY -->
+<div id="modal-overlay" onclick="closeModal()"></div>
+
+<!-- EDIT MODAL -->
+<div id="edit-modal">
+  <div class="modal-handle"></div>
+  <div class="modal-header">
+    <span class="modal-title" id="modal-title">编辑分类</span>
+    <button class="modal-close" onclick="closeModal()">×</button>
+  </div>
+  <div class="modal-body" id="modal-body"></div>
+  <div class="modal-footer">
+    <button class="mf-btn mf-cancel" onclick="closeModal()">取消</button>
+    <button class="mf-btn mf-save" onclick="saveModal()">保存</button>
+  </div>
+</div>
+
+<!-- NAME EDIT MODAL -->
+<div id="name-modal-overlay">
+  <div class="name-modal-card">
+    <div class="nm-title" id="nm-title">编辑名称</div>
+    <input class="nm-input" id="nm-input" type="text">
+    <div class="nm-btns">
+      <button class="nm-cancel" onclick="closeNameModal()">取消</button>
+      <button class="nm-save" onclick="saveNameModal()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== DATA MANAGER (Gist-Backed) =====================
+const GIST_ID = 'e120cfbc51a410e7f0f5449ca3de746b';
+const GIST_RAW_URL = 'https://gist.githubusercontent.com/rexzhanghaifeng/' + GIST_ID + '/raw/kanban-data.json';
+const TOKEN_KEY = 'gh_kanban_token';
+const CACHE_KEY = 'engineering_kanban_cache';
+
+const DataManager = {
+  async load() {
+    try {
+      // 1. Try fetching from Gist (latest cloud data)
+      const resp = await fetch(GIST_RAW_URL + '?t=' + Date.now());
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.version && data.projects) {
+          localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+          return data;
+        }
+      }
+    } catch(e) { /* network error, fall through */ }
+
+    // 2. Fallback to local cache (last known good state)
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (raw) { const d = JSON.parse(raw); if (d.version && d.projects) return d; }
+    } catch(e2) {}
+
+    // 3. Last resort: default data
+    return this.getDefault();
+  },
+
+  async save(data) {
+    data.lastUpdated = new Date().toISOString();
+
+    // Always save to local cache first (instant)
+    localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+
+    // Then try to sync to Gist
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      // First-time: ask for token
+      const t = prompt('请输入GitHub Personal Access Token以同步数据到云端：\n\n获取方式：github.com → Settings → Developer settings → Personal access tokens → Generate\n需要勾选 gist 权限。\n\n（留空则仅保存到本地浏览器）');
+      if (t && t.trim()) {
+        localStorage.setItem(TOKEN_KEY, t.trim());
+        return this.save(data); // retry with token
+      }
+      showToast('数据已保存到本地（未同步云端）');
+      return;
+    }
+
+    try {
+      const gistResp = await fetch('https://api.github.com/gists/' + GIST_ID, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Accept': 'application/vnd.github.v3+json'
+        },
+        body: JSON.stringify({
+          files: { 'kanban-data.json': { content: JSON.stringify(data, null, 2) } }
+        })
+      });
+      if (!gistResp.ok) throw new Error('Gist API returned ' + gistResp.status);
+      showToast('✓ 已同步到云端');
+    } catch(e) {
+      console.error('Gist sync failed:', e);
+      showToast('⚠ 云端同步失败，数据已保存在本地');
+    }
+  },
+  getDefault() {
+    const wf = ["施工单位提交","监理审核","业主审核","临港管委会生态处","发改处","审批完成"];
+    const wfSimple = ["施工单位提交","监理审核","业主审核","审批完成"];  // 流程至业主即可的分类
+    const wfQc = ["提交资料","监理/设计签认","投资监理审核","甲方部门领导审批","建管公司审批","完成"];  // 前程路电力隧道
+    const now = new Date();
+    function dStr(daysAgo) {
+      const d = new Date(now); d.setDate(d.getDate()-daysAgo);
+      return d.toISOString().slice(0,10);
+    }
+    function mkCat(id, name, workflow, stage, block, records, amount) {
+      return { id, name, workflow: [...workflow], currentStage: stage, blockingIssue: block||'', records: records||[], updatedAt: now.toISOString(), amount: amount||0 };
+    }
+    function mkRec(i, date, content, feedback, status) {
+      return { id: 'rec_' + i + '_' + Date.now(), date, content, feedback, feedbackStatus: status };
+    }
+    const generalBlock = '生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议';
+    return {
+      version: "2.0",
+      lastUpdated: now.toISOString(),
+      settings: { defaultWorkflow: ["施工单位提交","监理审核","业主审核","临港管委会生态处","发改处","审批完成"] },
+      activeProjectIndex: 0,
+      projects: [
+        {
+          id: 'proj_001', name: '临港污水处理厂排海管工程',
+          categories: [
+            mkCat('c001','变更一：云水路开道口和团结塘大堤堤顶加宽施工',wf,3,generalBlock,[
+              mkRec(1,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处安排会议审核','pending'),
+              mkRec(2,dStr(8),'向业主提交变更签证资料','业主已确认接收','positive')
+            ], 327.78),
+            mkCat('c002','变更二：压力井结构变更（方改圆）',wf,5,'',[
+              mkRec(3,dStr(1),'临港管委会生态处已签章，审批完成','变更单已完成全部审批流程','positive'),
+              mkRec(4,dStr(5),'业主完成签字，项目部配合送交生态处','生态处签收','positive')
+            ], 254.86),
+            mkCat('c003','变更三：透气阀井变更',wfSimple,3,'',[
+              mkRec(5,dStr(1),'业主已完成签字盖章，流程至业主即完成','变更审批已完成','positive'),
+              mkRec(6,dStr(7),'提交变更签证资料至业主审核','业主已确认','positive')
+            ], 3.74),
+            mkCat('c004','变更四：排海泵房至高位井（埋管变更顶管，加固保护）',wf,3,generalBlock,[
+              mkRec(7,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),
+              mkRec(8,dStr(9),'完成监理审核及业主初审','监理意见：方案合理，同意变更','positive')
+            ], 124.27),
+            mkCat('c005','变更五：排海泵房出水端闸门变更为2400不锈钢钢制闸门',wfSimple,3,'',[
+              mkRec(9,dStr(1),'业主已完成签字盖章，流程至业主即完成','变更审批已完成','positive'),
+              mkRec(10,dStr(8),'提交变更签证资料','业主已确认','positive')
+            ], 12.70),
+            mkCat('c006','变更六：配水井（增加MJS保护）',wf,3,generalBlock,[
+              mkRec(11,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),
+              mkRec(12,dStr(10),'资料提交至业主，监理已完成审核','等待业主签字确认','positive')
+            ], 102.47),
+            mkCat('c007','变更七：仪表小屋搬迁改造及废水水质检测',wfSimple,3,'',[
+              mkRec(13,dStr(1),'业主已完成签字盖章，流程至业主即完成','变更审批已完成','positive'),
+              mkRec(14,dStr(7),'提交变更签证资料至业主审核','业主已确认','positive')
+            ], 41.59),
+            mkCat('c008','变更八：海域顶管变更费用（曲线顶管增加中继间、钢管厚度调整）',wf,3,generalBlock,[
+              mkRec(15,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核；竣工图设计院工艺专业核对中','pending'),
+              mkRec(16,dStr(12),'完成曲线顶管变更论证及费用测算','监理认可变更理由及费用','positive')
+            ], 301.02),
+            mkCat('c009','变更九：清单漏项（牺牲阳极块、钻孔灌注桩、DN2200穿墙套管等）',wf,3,generalBlock,[
+              mkRec(17,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),
+              mkRec(18,dStr(11),'完成清单漏项资料汇总并提交监理','监理审核通过，转业主','positive')
+            ], 360.87),
+            mkCat('c010','变更十：材料调差',wf,4,'除临港管委会外，后续还需发改处审批',[
+              mkRec(19,dStr(3),'业主已签字，临港管委会上报中','后续还有发改处需要审核','pending'),
+              mkRec(20,dStr(15),'完成材料调差核算报告','监理和业主均认可调差范围和金额','positive')
+            ], 985.97)
+          ]
+        },
+        {
+          id: 'proj_002', name: '前程路电力隧道工程',
+          categories: [
+            // ===== 设计变更（10项，小计789.67万）=====
+            mkCat('c101','变更一：5#井MJS洞口加固',wfQc,4,'',[mkRec(101,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')], 128.80),
+            mkCat('c102','变更二：5#井通风井止水帷幕',wfQc,3,'',[mkRec(102,dStr(3),'按照燃气公司要求修改通风井保护方式，已上图','投资监理审核中','pending')], 85.24),
+            mkCat('c103','变更三：5#井槽壁加固',wfQc,3,'',[mkRec(103,dStr(3),'事项已认可已上图','投资监理审核中','pending')], 77.84),
+            mkCat('c104','变更四：永久排水',wfQc,2,'合同外工作内容，甲方意见需在图纸上体现',[mkRec(104,dStr(5),'提交永久排水费用资料','甲方要求在竣工图上体现，正在完善图纸','pending')], 93.47),
+            mkCat('c105','变更五：永久供水',wfQc,2,'合同外工作内容，甲方意见需在图纸上体现',[mkRec(105,dStr(5),'提交永久供水费用资料','甲方要求在竣工图上体现，正在完善图纸','pending')], 164.86),
+            mkCat('c106','变更六：穿越老南干线保护',wfQc,2,'',[mkRec(106,dStr(3),'提交穿越老南干线保护方案及费用','事项认可，投资监理初审中','pending')], 60.76),
+            mkCat('c107','变更七：盾构机机尾预留',wfQc,2,'',[mkRec(107,dStr(3),'盾构机机尾预留费用申报','事项认可，投资监理初审中','pending')], 50.00),
+            mkCat('c108','变更八：3#-4#区间障碍物处理',wfQc,2,'',[mkRec(108,dStr(3),'3#-4#区间障碍物处理费用','事项认可，投资监理初审中','pending')], 85.19),
+            mkCat('c109','变更九：穿越7号线保护',wfQc,2,'',[mkRec(109,dStr(3),'穿越7号线保护方案及费用','事项认可，投资监理初审中','pending')], 38.72),
+            mkCat('c110','变更十：穿越18号线保护',wfQc,2,'',[mkRec(110,dStr(3),'穿越18号线保护方案及费用','事项认可，投资监理初审中','pending')], 4.79),
+            // ===== 签证（9项，小计3318.70万）=====
+            mkCat('c201','签证一：3#驳岸施工',wfQc,3,'',[mkRec(201,dStr(3),'3#驳岸施工签证资料','事项已认可已上图，投资监理审核中','pending')], 333.37),
+            mkCat('c202','签证二：2#通风井修改',wfQc,3,'',[mkRec(202,dStr(3),'2#通风井修改签证资料','事项已认可已上图，投资监理审核中','pending')], 104.10),
+            mkCat('c203','签证三：6#井MJS隔离柱',wfQc,4,'',[mkRec(203,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')], 934.80),
+            mkCat('c204','签证四：6#电力监护',wfQc,4,'',[mkRec(204,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')], 152.89),
+            mkCat('c205','签证五：6#电缆搬迁',wfQc,4,'',[mkRec(205,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')], 28.00),
+            mkCat('c206','签证六：6号井接入段电缆保护',wfQc,4,'',[mkRec(206,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')], 52.32),
+            mkCat('c207','签证七：顶管管节不锈钢环',wfQc,4,'',[mkRec(207,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')], 708.47),
+            mkCat('c208','签证八：弧形支架',wfQc,4,'',[mkRec(208,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')], 565.75),
+            mkCat('c209','签证九：电力公司新增需求',wfQc,2,'',[mkRec(209,dStr(3),'电力公司新增要求，事项认可','与投资监理完善支撑资料中','pending')], 439.00)
+          ]
+        }
+      ]
+    };
+  }
+};
+
+// ===================== STATE (async-init) =====================
+let appData = null;
+let currentProjectIndex = 0;
+let editingProjectId = null;
+let editingCatId = null;
+let editState = {}; // working copy during modal edit
+let nameModalCallback = null;
+
+async function initApp() {
+  appData = await DataManager.load();
+  currentProjectIndex = appData.activeProjectIndex || 0;
+  render();
+}
+initApp();
+
+// ===================== UTILS =====================
+function uid() { return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+function truncate(str, n) { return str && str.length > n ? str.slice(0,n) + '…' : str; }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+function currentProject() { return appData.projects[currentProjectIndex]; }
+function statusLabel(cat) {
+  if(cat.currentStage >= cat.workflow.length-1) return 'done';
+  if(cat.blockingIssue && cat.blockingIssue.trim()) return 'block';
+  return 'active';
+}
+
+// ===================== RENDER OVERVIEW =====================
+function renderOverview() {
+  const grid = document.getElementById('overview-grid');
+  grid.innerHTML = '';
+  appData.projects.forEach((proj, idx) => {
+    const cats = proj.categories;
+    const total = cats.length;
+    const done = cats.filter(c => c.currentStage >= c.workflow.length-1).length;
+    const blocked = cats.filter(c => c.blockingIssue && c.blockingIssue.trim()).length;
+    const pct = total ? Math.round(done/total*100) : 0;
+
+    // 金额统计
+    const totalAmt = cats.reduce((s,c) => s + (Number(c.amount)||0), 0);
+    const doneAmt = cats.filter(c => c.currentStage >= c.workflow.length-1).reduce((s,c) => s + (Number(c.amount)||0), 0);
+    const amtPct = totalAmt ? Math.round(doneAmt/totalAmt*100) : 0;
+
+    const r = 26, circ = 2*Math.PI*r;
+    const dash = circ * pct / 100;
+    const amtDash = circ * amtPct / 100;
+
+    const card = document.createElement('div');
+    card.className = 'overview-card';
+    card.onclick = () => switchProject(idx);
+    card.innerHTML = `
+      <div class="ov-title" title="${proj.name}">${proj.name}</div>
+      <div class="ov-ring-row">
+        <div class="ov-ring-wrap">
+          <svg width="64" height="68" viewBox="0 0 64 68">
+            <circle cx="32" cy="34" r="${r}" fill="none" stroke="#E0E4EF" stroke-width="7"/>
+            <circle cx="32" cy="34" r="${r}" fill="none" stroke="${pct===100?'#2E7D32':'#2196F3'}" stroke-width="7"
+              stroke-dasharray="${dash} ${circ}" stroke-dashoffset="${circ*(1-pct/100)}"
+              stroke-linecap="round" transform="rotate(-90 32 34)"/>
+            <text x="32" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="${pct===100?'#2E7D32':'#1565C0'}">${pct}%</text>
+          </svg>
+          <div class="ov-ring-label">按分类</div>
+        </div>
+        <div style="width:1px;height:40px;background:#E0E4EF;margin:0 2px;flex-shrink:0"></div>
+        <div class="ov-ring-wrap">
+          <svg width="64" height="68" viewBox="0 0 64 68">
+            <circle cx="32" cy="34" r="${r}" fill="none" stroke="#E8F5E9" stroke-width="7"/>
+            <circle cx="32" cy="34" r="${r}" fill="none" stroke="${amtPct===100?'#2E7D32':'#43A047'}" stroke-width="7"
+              stroke-dasharray="${amtDash} ${circ}" stroke-dashoffset="${circ*(1-amtPct/100)}"
+              stroke-linecap="round" transform="rotate(-90 32 34)"/>
+            <text x="32" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#2E7D32">${amtPct}%</text>
+          </svg>
+          <div class="ov-ring-label">按金额</div>
+        </div>
+        <div class="ov-stats">
+          <div class="stat-line"><span class="stat-dot" style="background:#2196F3"></span>进行中 ${total-done-blocked}</div>
+          <div class="stat-line"><span class="stat-dot" style="background:#E65100"></span>有堵点 ${blocked}</div>
+          <div class="stat-line"><span class="stat-dot" style="background:#2E7D32"></span>已完成 ${done}/${total}</div>
+          <div class="stat-line" style="margin-top:2px;font-size:10px;color:#2E7D32">💰 完成金额 ${doneAmt.toFixed(2)}万 / ${totalAmt.toFixed(2)}万</div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ===================== RENDER TABS =====================
+function renderTabs() {
+  const tabs = document.getElementById('project-tabs');
+  tabs.innerHTML = '';
+  appData.projects.forEach((proj, idx) => {
+    const hasBlock = proj.categories.some(c => c.blockingIssue && c.blockingIssue.trim());
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (idx===currentProjectIndex?' active':'') + (hasBlock?' has-block':'');
+    btn.textContent = proj.name;
+    btn.onclick = () => switchProject(idx);
+    tabs.appendChild(btn);
+  });
+}
+
+// ===================== RENDER CATEGORIES =====================
+function renderCategories() {
+  const proj = currentProject();
+  document.getElementById('section-title-text').textContent = `${proj.name} — 共 ${proj.categories.length} 个分类`;
+  const grid = document.getElementById('categories-grid');
+  grid.innerHTML = '';
+  if(!proj.categories.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📂</div><div class="empty-text">暂无分类，点击下方添加</div></div>`;
+    return;
+  }
+  proj.categories.forEach(cat => {
+    const st = statusLabel(cat);
+    const card = document.createElement('div');
+    card.className = 'cat-card' + (st==='block'?' has-block':'') + (st==='done'?' is-done':'');
+    card.onclick = () => openEditModal(proj.id, cat.id);
+
+    // Step bar
+    const steps = cat.workflow;
+    let stepsHtml = '<div class="steps-row">';
+    steps.forEach((s, i) => {
+      if(i > 0) stepsHtml += `<div class="step-connector ${i<=cat.currentStage?'passed':''}${i===cat.currentStage?'current':''}"></div>`;
+      const cls = i < cat.currentStage ? 'passed' : i === cat.currentStage ? 'current' : 'future';
+      stepsHtml += `<div class="step-dot-wrap"><div class="step-dot ${cls}" title="${s}"></div></div>`;
+    });
+    stepsHtml += '</div>';
+    const curLabel = steps[cat.currentStage] || '—';
+
+    // Latest record
+    const recs = [...cat.records].sort((a,b) => b.date.localeCompare(a.date));
+    let latestHtml = recs.length
+      ? `<div class="latest-record"><div class="lr-date">${recs[0].date}</div><div class="lr-content">${truncate(recs[0].content,60)}</div></div>`
+      : `<div class="no-record">暂无推进记录</div>`;
+
+    // Block
+    const blockHtml = cat.blockingIssue ? `<div class="block-bar"><span class="block-label">⚠ 堵点</span>${cat.blockingIssue}</div>` : '';
+
+    // Badge
+    const badgeCls = st==='block'?'badge-block':st==='done'?'badge-done':'badge-active';
+    const badgeTxt = st==='block'?'有堵点':st==='done'?'已完成':'进行中';
+
+    card.innerHTML = `
+      <div class="cat-card-header">
+        <div class="cat-name">${cat.name}</div>
+        <span class="status-badge ${badgeCls}">${badgeTxt}</span>
+      </div>
+      <div class="step-bar">${stepsHtml}</div>
+      <div class="current-stage-label">当前：${curLabel}</div>
+      ${latestHtml}${blockHtml}`;
+    grid.appendChild(card);
+  });
+}
+
+// ===================== FULL RENDER =====================
+function render() {
+  renderOverview();
+  renderTabs();
+  renderCategories();
+}
+
+// ===================== SWITCH PROJECT =====================
+async function switchProject(idx) {
+  currentProjectIndex = idx;
+  appData.activeProjectIndex = idx;
+  await DataManager.save(appData);
+  render();
+}
+
+// ===================== OPEN EDIT MODAL =====================
+function openEditModal(projId, catId) {
+  const proj = appData.projects.find(p=>p.id===projId);
+  const cat = proj.categories.find(c=>c.id===catId);
+  editingProjectId = projId;
+  editingCatId = catId;
+  // deep copy working state
+  editState = JSON.parse(JSON.stringify(cat));
+
+  document.getElementById('modal-title').textContent = cat.name;
+  renderModalBody();
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('edit-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderModalBody() {
+  const cat = editState;
+  const steps = cat.workflow;
+  const recs = [...cat.records].sort((a,b) => b.date.localeCompare(a.date));
+  const today = new Date().toISOString().slice(0,10);
+
+  // Stage selector
+  let stagesHtml = steps.map((s,i) => {
+    const sel = i===cat.currentStage;
+    const passed = i<cat.currentStage;
+    return `<div class="stage-item ${sel?'selected':''} ${passed?'passed':''}" onclick="selectStage(${i})">
+      <div class="stage-num">${i+1}</div>
+      <div class="stage-name">${s}</div>
+      ${sel?'<span class="stage-check">✓</span>':''}
+    </div>`;
+  }).join('');
+
+  // Workflow edit
+  let wfTagsHtml = steps.map((s,i) =>
+    `<span class="wf-tag">${s}<button class="wf-tag-del" onclick="removeWorkflowStep(${i})" title="删除此步骤">×</button></span>`
+  ).join('');
+
+  // Records
+  let recsHtml = recs.length ? recs.map(r => {
+    const statusMap = {pending:'⏳ 等待反馈', positive:'✅ 推进顺利', blocked:'🚫 受阻', none:'📝 仅记录'};
+    const statusCls = r.feedbackStatus || 'none';
+    return `<div class="record-item">
+      <div class="ri-date">${r.date}</div>
+      <div class="ri-content">${r.content || '—'}</div>
+      ${r.feedback ? `<div class="ri-feedback">${r.feedback}</div>` : ''}
+      <span class="ri-status ${statusCls}">${statusMap[statusCls]||statusCls}</span>
+      <button class="record-del-btn" onclick="deleteRecord('${r.id}')" title="删除记录">×</button>
+    </div>`;
+  }).join('') : '<div style="text-align:center;color:#aaa;font-size:13px;padding:10px">暂无推进记录</div>';
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-section">
+      <div class="section-label">📍 审批进度 — 点击切换当前阶段</div>
+      <div class="stage-selector">${stagesHtml}</div>
+      <details style="margin-top:8px">
+        <summary style="font-size:11px;color:var(--primary);cursor:pointer;padding:4px 0">⚙ 自定义审批步骤</summary>
+        <div style="margin-top:8px;background:#F8F9FF;border-radius:8px;padding:10px">
+          <div class="workflow-edit-row" id="wf-tags-row">${wfTagsHtml}</div>
+          <div class="wf-add-row">
+            <input class="wf-add-input" id="wf-new-step" placeholder="输入新步骤名称">
+            <button class="wf-add-btn" onclick="addWorkflowStep()">添加</button>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="modal-section">
+      <div class="section-label">⚠ 堵点说明</div>
+      <textarea class="modal-textarea" id="block-input" placeholder="描述当前堵点（无堵点可留空）">${cat.blockingIssue||''}</textarea>
+    </div>
+
+    <div class="modal-section">
+      <div class="section-label">📅 推进记录</div>
+      <div class="record-list" id="record-list">${recsHtml}</div>
+      <div class="add-record-form">
+        <div class="form-title">＋ 添加推进记录</div>
+        <div class="form-row"><label>日期</label><input class="form-input" type="date" id="rec-date" value="${today}"></div>
+        <div class="form-row"><label>工作内容</label><textarea class="form-input" id="rec-content" rows="2" placeholder="描述本次推进的具体工作内容"></textarea></div>
+        <div class="form-row"><label>反馈情况</label><textarea class="form-input" id="rec-feedback" rows="2" placeholder="对方反馈或当前状态"></textarea></div>
+        <div class="form-row"><label>反馈状态</label>
+          <select class="form-select" id="rec-status">
+            <option value="pending">⏳ 进行中/等待反馈</option>
+            <option value="positive">✅ 推进顺利</option>
+            <option value="blocked">🚫 受阻/有问题</option>
+            <option value="none">📝 仅记录</option>
+          </select>
+        </div>
+        <button class="add-rec-btn" onclick="addRecord()">添加记录</button>
+      </div>
+    </div>
+
+    <div class="modal-section" style="border-top:1px dashed var(--border);padding-top:12px;margin-top:4px">
+      <div class="section-label">⚙ 分类管理</div>
+      <button class="del-cat-btn" onclick="confirmDeleteCat()">🗑 删除此分类</button>
+    </div>
+  `;
+}
+
+function selectStage(idx) {
+  editState.currentStage = idx;
+  renderModalBody();
+}
+
+function deleteRecord(recId) {
+  editState.records = editState.records.filter(r => r.id !== recId);
+  renderModalBody();
+}
+
+function addRecord() {
+  const date = document.getElementById('rec-date').value;
+  const content = document.getElementById('rec-content').value.trim();
+  const feedback = document.getElementById('rec-feedback').value.trim();
+  const status = document.getElementById('rec-status').value;
+  if(!date || !content) { showToast('请填写日期和工作内容'); return; }
+  editState.records.push({ id: uid(), date, content, feedback, feedbackStatus: status });
+  renderModalBody();
+  showToast('记录已添加');
+}
+
+function addWorkflowStep() {
+  const inp = document.getElementById('wf-new-step');
+  const val = inp.value.trim();
+  if(!val) return;
+  editState.workflow.push(val);
+  inp.value = '';
+  renderModalBody();
+}
+
+function removeWorkflowStep(idx) {
+  if(editState.workflow.length <= 2) { showToast('至少保留2个步骤'); return; }
+  editState.workflow.splice(idx, 1);
+  if(editState.currentStage >= editState.workflow.length) editState.currentStage = editState.workflow.length-1;
+  renderModalBody();
+}
+
+async function confirmDeleteCat() {
+  if(confirm(`确认删除分类"${editState.name}"？此操作不可撤销。`)) {
+    const proj = appData.projects.find(p=>p.id===editingProjectId);
+    proj.categories = proj.categories.filter(c=>c.id!==editingCatId);
+    await DataManager.save(appData);
+    closeModal();
+    render();
+    showToast('分类已删除');
+  }
+}
+
+async function saveModal() {
+  // collect current form values
+  editState.blockingIssue = document.getElementById('block-input').value.trim();
+  editState.updatedAt = new Date().toISOString();
+
+  const proj = appData.projects.find(p=>p.id===editingProjectId);
+  const catIdx = proj.categories.findIndex(c=>c.id===editingCatId);
+  proj.categories[catIdx] = editState;
+  await DataManager.save(appData);
+  closeModal();
+  render();
+  showToast('已保存');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.getElementById('edit-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ===================== NAME EDIT MODAL =====================
+let nmCallback = null;
+function openNameModal(title, currentValue, callback) {
+  document.getElementById('nm-title').textContent = title;
+  document.getElementById('nm-input').value = currentValue;
+  nmCallback = callback;
+  document.getElementById('name-modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('nm-input').focus(), 100);
+}
+function closeNameModal() {
+  document.getElementById('name-modal-overlay').classList.remove('open');
+  nmCallback = null;
+}
+function saveNameModal() {
+  const val = document.getElementById('nm-input').value.trim();
+  if(!val) { showToast('名称不能为空'); return; }
+  if(nmCallback) nmCallback(val);
+  closeNameModal();
+}
+document.getElementById('nm-input').addEventListener('keydown', e => { if(e.key==='Enter') saveNameModal(); });
+
+// ===================== ADD PROJECT =====================
+async function addProject() {
+  openNameModal('新建工程名称', '', name => {
+    const wf = [...appData.settings.defaultWorkflow];
+    appData.projects.push({ id: uid(), name, categories: [] });
+    await DataManager.save(appData);
+    currentProjectIndex = appData.projects.length - 1;
+    appData.activeProjectIndex = currentProjectIndex;
+    await DataManager.save(appData);
+    render();
+    showToast('工程已创建');
+  });
+}
+
+// ===================== ADD CATEGORY =====================
+async function addCategory() {
+  const proj = currentProject();
+  openNameModal(`在"${proj.name}"中添加分类`, '', name => {
+    const wf = [...appData.settings.defaultWorkflow];
+    proj.categories.push({ id: uid(), name, workflow: wf, currentStage: 0, blockingIssue: '', records: [], updatedAt: new Date().toISOString() });
+    await DataManager.save(appData);
+    render();
+    showToast('分类已添加');
+  });
+}
+
+// ===================== WEEKLY REPORT =====================
+function openWeeklyReport() {
+  window.open('weekly-report.html', '_blank');
+}
+
+// ===================== EXPORT DATA =====================
+function exportData() {
+  const json = JSON.stringify(appData, null, 2);
+  const blob = new Blob([json], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '结算看板备份_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('数据已导出');
+}
+
+// ===================== INIT =====================
+// render() called by async initApp() above
+</script>
+</body>
+</html>

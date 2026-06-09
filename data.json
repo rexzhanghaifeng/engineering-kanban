@@ -1,0 +1,818 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-06-09T11:31:35.210850",
+  "settings": {
+    "defaultWorkflow": [
+      "施工单位提交",
+      "监理审核",
+      "业主审核",
+      "临港管委会生态处",
+      "发改处",
+      "审批完成"
+    ]
+  },
+  "activeProjectIndex": 0,
+  "projects": [
+    {
+      "id": "proj_001",
+      "name": "临港污水处理厂排海管工程",
+      "categories": [
+        {
+          "id": "c001",
+          "name": "变更一：云水路开道口和团结塘大堤堤顶加宽施工",
+          "workflow": [
+            "施工单位提交",
+            "监理审核",
+            "业主审核",
+            "临港管委会生态处",
+            "发改处",
+            "审批完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议",
+          "records": [
+            {
+              "id": "rec_1_1780975895",
+              "date": "2026-06-06",
+              "content": "业主单位已完成签字盖章",
+              "feedback": "待临港管委会生态处安排会议审核",
+              "feedbackStatus": "pending"
+            },
+            {
+              "id": "rec_2_1780975895",
+              "date": "2026-06-01",
+              "content": "向业主提交变更签证资料",
+              "feedback": "业主已确认接收",
+              "feedbackStatus": "positive"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 327.78
+        },
+        {
+          "id": "c002",
+          "name": "变更二：压力井结构变更（方改圆）",
+          "workflow": [
+            "施工单位提交",
+            "监理审核",
+            "业主审核",
+            "临港管委会生态处",
+            "发改处",
+            "审批完成"
+          ],
+          "currentStage": 5,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_3_1780975895",
+              "date": "2026-06-08",
+              "content": "临港管委会生态处已签章，审批完成",
+              "feedback": "变更单已完成全部审批流程",
+              "feedbackStatus": "positive"
+            },
+            {
+              "id": "rec_4_1780975895",
+              "date": "2026-06-04",
+              "content": "业主完成签字，项目部配合送交生态处",
+              "feedback": "生态处签收",
+              "feedbackStatus": "positive"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 254.86
+        },
+        {
+          "id": "c003",
+          "name": "变更三：透气阀井变更",
+          "workflow": [
+            "施工单位提交",
+            "监理审核",
+            "业主审核",
+            "审批完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_5_1780975895",
+              "date": "2026-06-08",
+              "content": "业主已完成签字盖章，流程至业主即完成",
+              "feedback": "变更审批已完成",
+              "feedbackStatus": "positive"
+            },
+            {
+              "id": "rec_6_1780975895",
+              "date": "2026-06-02",
+              "content": "提交变更签证资料至业主审核",
+              "feedback": "业主已确认",
+              "feedbackStatus": "positive"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 3.74
+        },
+        {
+          "id": "c004",
+          "name": "变更四：排海泵房至高位井（埋管变更顶管，加固保护）",
+          "workflow": [
+            "施工单位提交",
+            "监理审核",
+            "业主审核",
+            "临港管委会生态处",
+            "发改处",
+            "审批完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议",
+          "records": [
+            {
+              "id": "rec_7_1780975895",
+              "date": "2026-06-06",
+              "content": "业主单位已完成签字盖章",
+              "feedback": "待临港管委会生态处审核",
+              "feedbackStatus": "pending"
+            },
+            {
+              "id": "rec_8_1780975895",
+              "date": "2026-05-31",
+              "content": "完成监理审核及业主初审",
+              "feedback": "监理意见：方案合理，同意变更",
+              "feedbackStatus": "positive"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 124.27
+        },
+        {
+          "id": "c005",
+          "name": "变更五：排海泵房出水端闸门变更为2400不锈钢钢制闸门",
+          "workflow": [
+            "施工单位提交",
+            "监理审核",
+            "业主审核",
+            "审批完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_9_1780975895",
+              "date": "2026-06-08",
+              "content": "业主已完成签字盖章，流程至业主即完成",
+              "feedback": "变更审批已完成",
+              "feedbackStatus": "positive"
+            },
+            {
+              "id": "rec_10_1780975895",
+              "date": "2026-06-01",
+              "content": "提交变更签证资料",
+              "feedback": "业主已确认",
+              "feedbackStatus": "positive"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 12.7
+        },
+        {
+          "id": "c006",
+          "name": "变更六：配水井（增加MJS保护）",
+          "workflow": [
+            "施工单位提交",
+            "监理审核",
+            "业主审核",
+            "临港管委会生态处",
+            "发改处",
+            "审批完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议",
+          "records": [
+            {
+              "id": "rec_11_1780975895",
+              "date": "2026-06-06",
+              "content": "业主单位已完成签字盖章",
+              "feedback": "待临港管委会生态处审核",
+              "feedbackStatus": "pending"
+            },
+            {
+              "id": "rec_12_1780975895",
+              "date": "2026-05-30",
+              "content": "资料提交至业主，监理已完成审核",
+              "feedback": "等待业主签字确认",
+              "feedbackStatus": "positive"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 102.47
+        },
+        {
+          "id": "c007",
+          "name": "变更七：仪表小屋搬迁改造及废水水质检测",
+          "workflow": [
+            "施工单位提交",
+            "监理审核",
+            "业主审核",
+            "审批完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_13_1780975895",
+              "date": "2026-06-08",
+              "content": "业主已完成签字盖章，流程至业主即完成",
+              "feedback": "变更审批已完成",
+              "feedbackStatus": "positive"
+            },
+            {
+              "id": "rec_14_1780975895",
+              "date": "2026-06-02",
+              "content": "提交变更签证资料至业主审核",
+              "feedback": "业主已确认",
+              "feedbackStatus": "positive"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 41.59
+        },
+        {
+          "id": "c008",
+          "name": "变更八：海域顶管变更费用（曲线顶管增加中继间、钢管厚度调整）",
+          "workflow": [
+            "施工单位提交",
+            "监理审核",
+            "业主审核",
+            "临港管委会生态处",
+            "发改处",
+            "审批完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议",
+          "records": [
+            {
+              "id": "rec_15_1780975895",
+              "date": "2026-06-06",
+              "content": "业主单位已完成签字盖章",
+              "feedback": "待临港管委会生态处审核；竣工图设计院工艺专业核对中",
+              "feedbackStatus": "pending"
+            },
+            {
+              "id": "rec_16_1780975895",
+              "date": "2026-05-28",
+              "content": "完成曲线顶管变更论证及费用测算",
+              "feedback": "监理认可变更理由及费用",
+              "feedbackStatus": "positive"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 301.02
+        },
+        {
+          "id": "c009",
+          "name": "变更九：清单漏项（牺牲阳极块、钻孔灌注桩、DN2200穿墙套管等）",
+          "workflow": [
+            "施工单位提交",
+            "监理审核",
+            "业主审核",
+            "临港管委会生态处",
+            "发改处",
+            "审批完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议",
+          "records": [
+            {
+              "id": "rec_17_1780975895",
+              "date": "2026-06-06",
+              "content": "业主单位已完成签字盖章",
+              "feedback": "待临港管理委员会审核",
+              "feedbackStatus": "pending"
+            },
+            {
+              "id": "rec_18_1780975895",
+              "date": "2026-05-29",
+              "content": "完成清单漏项资料汇总并提交监理",
+              "feedback": "监理审核通过，转业主",
+              "feedbackStatus": "positive"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 360.87
+        },
+        {
+          "id": "c010",
+          "name": "变更十：材料调差",
+          "workflow": [
+            "施工单位提交",
+            "监理审核",
+            "业主审核",
+            "临港管委会生态处",
+            "发改处",
+            "审批完成"
+          ],
+          "currentStage": 4,
+          "blockingIssue": "除临港管委会外，后续还需发改处审批",
+          "records": [
+            {
+              "id": "rec_19_1780975895",
+              "date": "2026-06-06",
+              "content": "业主已签字，临港管委会上报中",
+              "feedback": "后续还有发改处需要审核",
+              "feedbackStatus": "pending"
+            },
+            {
+              "id": "rec_20_1780975895",
+              "date": "2026-05-25",
+              "content": "完成材料调差核算报告",
+              "feedback": "监理和业主均认可调差范围和金额",
+              "feedbackStatus": "positive"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 985.97
+        }
+      ]
+    },
+    {
+      "id": "proj_002",
+      "name": "前程路电力隧道工程",
+      "categories": [
+        {
+          "id": "c101",
+          "name": "变更一：5#井MJS洞口加固",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 4,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_101_1780975895",
+              "date": "2026-06-06",
+              "content": "确认单监理、设计、投资监理已签署",
+              "feedback": "现在甲方张总部门领导吴总处审批",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 128.8
+        },
+        {
+          "id": "c102",
+          "name": "变更二：5#井通风井止水帷幕",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_102_1780975895",
+              "date": "2026-06-06",
+              "content": "按照燃气公司要求修改通风井保护方式，已上图",
+              "feedback": "投资监理审核中",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 85.24
+        },
+        {
+          "id": "c103",
+          "name": "变更三：5#井槽壁加固",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_103_1780975895",
+              "date": "2026-06-06",
+              "content": "事项已认可已上图",
+              "feedback": "投资监理审核中",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 77.84
+        },
+        {
+          "id": "c104",
+          "name": "变更四：永久排水",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 2,
+          "blockingIssue": "合同外工作内容，甲方意见需在图纸上体现",
+          "records": [
+            {
+              "id": "rec_104_1780975895",
+              "date": "2026-06-04",
+              "content": "提交永久排水费用资料",
+              "feedback": "甲方要求在竣工图上体现，正在完善图纸",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 93.47
+        },
+        {
+          "id": "c105",
+          "name": "变更五：永久供水",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 2,
+          "blockingIssue": "合同外工作内容，甲方意见需在图纸上体现",
+          "records": [
+            {
+              "id": "rec_105_1780975895",
+              "date": "2026-06-04",
+              "content": "提交永久供水费用资料",
+              "feedback": "甲方要求在竣工图上体现，正在完善图纸",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 164.86
+        },
+        {
+          "id": "c106",
+          "name": "变更六：穿越老南干线保护",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 2,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_106_1780975895",
+              "date": "2026-06-06",
+              "content": "提交穿越老南干线保护方案及费用",
+              "feedback": "事项认可，投资监理初审中",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 60.76
+        },
+        {
+          "id": "c107",
+          "name": "变更七：盾构机机尾预留",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 2,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_107_1780975895",
+              "date": "2026-06-06",
+              "content": "盾构机机尾预留费用申报",
+              "feedback": "事项认可，投资监理初审中",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 50.0
+        },
+        {
+          "id": "c108",
+          "name": "变更八：3#-4#区间障碍物处理",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 2,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_108_1780975895",
+              "date": "2026-06-06",
+              "content": "3#-4#区间障碍物处理费用",
+              "feedback": "事项认可，投资监理初审中",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 85.19
+        },
+        {
+          "id": "c109",
+          "name": "变更九：穿越7号线保护",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 2,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_109_1780975895",
+              "date": "2026-06-06",
+              "content": "穿越7号线保护方案及费用",
+              "feedback": "事项认可，投资监理初审中",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 38.72
+        },
+        {
+          "id": "c110",
+          "name": "变更十：穿越18号线保护",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 2,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_110_1780975895",
+              "date": "2026-06-06",
+              "content": "穿越18号线保护方案及费用",
+              "feedback": "事项认可，投资监理初审中",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 4.79
+        },
+        {
+          "id": "c201",
+          "name": "签证一：3#驳岸施工",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_201_1780975895",
+              "date": "2026-06-06",
+              "content": "3#驳岸施工签证资料",
+              "feedback": "事项已认可已上图，投资监理审核中",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 333.37
+        },
+        {
+          "id": "c202",
+          "name": "签证二：2#通风井修改",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 3,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_202_1780975895",
+              "date": "2026-06-06",
+              "content": "2#通风井修改签证资料",
+              "feedback": "事项已认可已上图，投资监理审核中",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 104.1
+        },
+        {
+          "id": "c203",
+          "name": "签证三：6#井MJS隔离柱",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 4,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_203_1780975895",
+              "date": "2026-06-06",
+              "content": "确认单监理、设计、投资监理已签署",
+              "feedback": "现在甲方张总部门领导吴总处审批",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 934.8
+        },
+        {
+          "id": "c204",
+          "name": "签证四：6#电力监护",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 4,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_204_1780975895",
+              "date": "2026-06-06",
+              "content": "确认单监理、设计、投资监理已签署",
+              "feedback": "现在甲方张总部门领导吴总处审批",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 152.89
+        },
+        {
+          "id": "c205",
+          "name": "签证五：6#电缆搬迁",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 4,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_205_1780975895",
+              "date": "2026-06-06",
+              "content": "确认单监理、设计、投资监理已签署",
+              "feedback": "现在甲方张总部门领导吴总处审批",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 28.0
+        },
+        {
+          "id": "c206",
+          "name": "签证六：6号井接入段电缆保护",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 4,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_206_1780975895",
+              "date": "2026-06-06",
+              "content": "确认单监理、设计、投资监理已签署",
+              "feedback": "现在甲方张总部门领导吴总处审批",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 52.32
+        },
+        {
+          "id": "c207",
+          "name": "签证七：顶管管节不锈钢环",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 4,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_207_1780975895",
+              "date": "2026-06-06",
+              "content": "确认单监理、设计、投资监理已签署",
+              "feedback": "现在甲方张总部门领导吴总处审批",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 708.47
+        },
+        {
+          "id": "c208",
+          "name": "签证八：弧形支架",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 4,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_208_1780975895",
+              "date": "2026-06-06",
+              "content": "确认单监理、设计、投资监理已签署",
+              "feedback": "现在甲方张总部门领导吴总处审批",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 565.75
+        },
+        {
+          "id": "c209",
+          "name": "签证九：电力公司新增需求",
+          "workflow": [
+            "提交资料",
+            "监理/设计签认",
+            "投资监理审核",
+            "甲方部门领导审批",
+            "建管公司审批",
+            "完成"
+          ],
+          "currentStage": 2,
+          "blockingIssue": "",
+          "records": [
+            {
+              "id": "rec_209_1780975895",
+              "date": "2026-06-06",
+              "content": "电力公司新增要求，事项认可",
+              "feedback": "与投资监理完善支撑资料中",
+              "feedbackStatus": "pending"
+            }
+          ],
+          "updatedAt": "2026-06-09T11:31:35.210850",
+          "amount": 439.0
+        }
+      ]
+    }
+  ]
+}
