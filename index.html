@@ -540,7 +540,7 @@ var TOKEN_KEY = 'gh_kanban_token';
   var generalBlock = '生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议';
 
   window.appData = {
-    version: "2.2", lastUpdated: now.toISOString(),
+    version: "2.2", lastUpdated: "2000-01-01T00:00:00.000Z",
     settings: { defaultWorkflow: wf.slice() }, activeProjectIndex: 0,
     projects: [
       { id:'proj_001',name:'临港污水处理厂排海管工程',projectBlockingIssue:generalBlock,categories:[
@@ -548,7 +548,7 @@ var TOKEN_KEY = 'gh_kanban_token';
         mkCat('c002','变更二：压力井结构变更（方改圆）',wf,5,'',[mkRec(3,dStr(1),'临港管委会生态处已签章，审批完成','变更单已完成全部审批流程','positive'),mkRec(4,dStr(5),'业主完成签字，项目部配合送交生态处','生态处签收','positive')],254.86),
         mkCat('c003','变更三：透气阀井变更',wfSimple,3,'',[mkRec(5,dStr(1),'业主已完成签字盖章，流程至业主即完成','变更审批已完成','positive'),mkRec(6,dStr(7),'提交变更签证资料至业主审核','业主已确认','positive')],3.74),
         mkCat('c004','变更四：排海泵房至高位井（埋管变更顶管，加固保护）',wf,3,'',[mkRec(7,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),mkRec(8,dStr(9),'完成监理审核及业主初审','监理意见：方案合理，同意变更','positive')],124.27),
-        mkCat('c005','变更五：排海泵房出水端闸门变更为2400不锈钢钢制闸门',wfSimple,3,'',[mkRec(9,dStr(1),'业主已完成签字盖章，流程至业主即完成','变更审批已完成','positive'),mkRec(10,dStr(8),'提交变更签证资料','业主已确认','positive')],12.70),
+        mkCat('c005','变更五：排海泵房出水端闸门变更为2400不锈钢钢制闸门',wfSimple,3,'',[mkRec(9,dStr(1),'业主已完成签字盖章，流程至业主即完成','变更审批已完成','positive'),mkRec(10,dStr(8),'提交变更签证资料','业主已确认','positive')],12.7),
         mkCat('c006','变更六：配水井（增加MJS保护）',wf,3,'',[mkRec(11,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核','pending'),mkRec(12,dStr(10),'资料提交至业主，监理已完成审核','等待业主签字确认','positive')],102.47),
         mkCat('c007','变更七：仪表小屋搬迁改造及废水水质检测',wfSimple,3,'',[mkRec(13,dStr(1),'业主已完成签字盖章，流程至业主即完成','变更审批已完成','positive'),mkRec(14,dStr(7),'提交变更签证资料至业主审核','业主已确认','positive')],41.59),
         mkCat('c008','变更八：海域顶管变更费用（曲线顶管增加中继间、钢管厚度调整）',wf,3,'',[mkRec(15,dStr(3),'业主单位已完成签字盖章','待临港管委会生态处审核；竣工图设计院工艺专业核对中','pending'),mkRec(16,dStr(12),'完成曲线顶管变更论证及费用测算','监理认可变更理由及费用','positive')],301.02),
@@ -556,25 +556,25 @@ var TOKEN_KEY = 'gh_kanban_token';
         mkCat('c010','变更十：材料调差',wf,4,'除临港管委会外，后续还需发改处审批',[mkRec(19,dStr(3),'业主已签字，临港管委会上报中','后续还有发改处需要审核','pending'),mkRec(20,dStr(15),'完成材料调差核算报告','监理和业主均认可调差范围和金额','positive')],985.97)
       ]},
       { id:'proj_002',name:'前程路电力隧道工程',projectBlockingIssue:'',categories:[
-        mkCat('c101','变更一：5#井MJS洞口加固',wfQc,4,'',[mkRec(101,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],128.80),
+        mkCat('c101','变更一：5#井MJS洞口加固',wfQc,4,'',[mkRec(101,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],128.8),
         mkCat('c102','变更二：5#井通风井止水帷幕',wfQc,3,'',[mkRec(102,dStr(3),'按照燃气公司要求修改通风井保护方式，已上图','投资监理审核中','pending')],85.24),
         mkCat('c103','变更三：5#井槽壁加固',wfQc,3,'',[mkRec(103,dStr(3),'事项已认可已上图','投资监理审核中','pending')],77.84),
         mkCat('c104','变更四：永久排水',wfQc,2,'合同外工作内容，甲方意见需在图纸上体现',[mkRec(104,dStr(5),'提交永久排水费用资料','甲方要求在竣工图上体现，正在完善图纸','pending')],93.47),
         mkCat('c105','变更五：永久供水',wfQc,2,'合同外工作内容，甲方意见需在图纸上体现',[mkRec(105,dStr(5),'提交永久供水费用资料','甲方要求在竣工图上体现，正在完善图纸','pending')],164.86),
         mkCat('c106','变更六：穿越老南干线保护',wfQc,2,'',[mkRec(106,dStr(3),'提交穿越老南干线保护方案及费用','事项认可，投资监理初审中','pending')],60.76),
-        mkCat('c107','变更七：盾构机机尾预留',wfQc,2,'',[mkRec(107,dStr(3),'盾构机机尾预留费用申报','事项认可，投资监理初审中','pending')],50.00),
+        mkCat('c107','变更七：盾构机机尾预留',wfQc,2,'',[mkRec(107,dStr(3),'盾构机机尾预留费用申报','事项认可，投资监理初审中','pending')],50),
         mkCat('c108','变更八：3#-4#区间障碍物处理',wfQc,2,'',[mkRec(108,dStr(3),'3#-4#区间障碍物处理费用','事项认可，投资监理初审中','pending')],85.19),
         mkCat('c109','变更九：穿越7号线保护',wfQc,2,'',[mkRec(109,dStr(3),'穿越7号线保护方案及费用','事项认可，投资监理初审中','pending')],38.72),
         mkCat('c110','变更十：穿越18号线保护',wfQc,2,'',[mkRec(110,dStr(3),'穿越18号线保护方案及费用','事项认可，投资监理初审中','pending')],4.79),
         mkCat('c201','签证一：3#驳岸施工',wfQc,3,'',[mkRec(201,dStr(3),'3#驳岸施工签证资料','事项已认可已上图，投资监理审核中','pending')],333.37),
-        mkCat('c202','签证二：2#通风井修改',wfQc,3,'',[mkRec(202,dStr(3),'2#通风井修改签证资料','事项已认可已上图，投资监理审核中','pending')],104.10),
-        mkCat('c203','签证三：6#井MJS隔离柱',wfQc,4,'',[mkRec(203,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],934.80),
+        mkCat('c202','签证二：2#通风井修改',wfQc,3,'',[mkRec(202,dStr(3),'2#通风井修改签证资料','事项已认可已上图，投资监理审核中','pending')],104.1),
+        mkCat('c203','签证三：6#井MJS隔离柱',wfQc,4,'',[mkRec(203,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],934.8),
         mkCat('c204','签证四：6#电力监护',wfQc,4,'',[mkRec(204,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],152.89),
-        mkCat('c205','签证五：6#电缆搬迁',wfQc,4,'',[mkRec(205,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],28.00),
+        mkCat('c205','签证五：6#电缆搬迁',wfQc,4,'',[mkRec(205,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],28),
         mkCat('c206','签证六：6号井接入段电缆保护',wfQc,4,'',[mkRec(206,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],52.32),
         mkCat('c207','签证七：顶管管节不锈钢环',wfQc,4,'',[mkRec(207,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],708.47),
         mkCat('c208','签证八：弧形支架',wfQc,4,'',[mkRec(208,dStr(3),'确认单监理、设计、投资监理已签署','现在甲方张总部门领导吴总处审批','pending')],565.75),
-        mkCat('c209','签证九：电力公司新增需求',wfQc,2,'',[mkRec(209,dStr(3),'电力公司新增要求，事项认可','与投资监理完善支撑资料中','pending')],439.00)
+        mkCat('c209','签证九：电力公司新增需求',wfQc,2,'',[mkRec(209,dStr(3),'电力公司新增要求，事项认可','与投资监理完善支撑资料中','pending')],439)
       ]}
     ]
   };
@@ -593,6 +593,18 @@ var DataManager = {
     data.lastUpdated = new Date().toISOString();
     // 1. 始终先存本地（瞬间完成）
     try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch(e) {}
+
+    // 安全守卫：新设备（无本地缓存）且云端未加载完成时，阻止保存防止覆盖
+    if (!_hasLocalCache && !cloudLoaded) {
+      var ok = confirm(
+        '⚠ 云端数据尚未加载完成！\n\n' +
+        '当前页面显示的是离线备用数据，继续保存会将旧数据上传到云端，\n' +
+        '覆盖线上已经更新的最新数据。\n\n' +
+        '建议：点击"取消"，等待页面顶部"加载中"提示消失后再保存。\n\n' +
+        '确定要强制保存吗？'
+      );
+      if (!ok) return;
+    }
 
     // 2. 取 token
     var token = '';
@@ -1216,6 +1228,7 @@ function viewProjOverview() {
 }
 
 // ===================== WEEKLY REPORT =====================
+var cloudLoaded = false;
 var weeklyReportVisible = false;
 
 function getWeekRange() {
@@ -1736,8 +1749,9 @@ function migrateData(d) {
   return d;
 }
 
-// ===================== INIT (同步，立即执行) =====================
-// 1. 优先从 localStorage 恢复（用户上次保存的数据）
+// ===================== INIT =====================
+var _hasLocalCache = false;
+// 1. 优先从 localStorage 恢复
 (function initFromCache() {
   try {
     var cached = localStorage.getItem(CACHE_KEY);
@@ -1746,27 +1760,48 @@ function migrateData(d) {
       if (d && d.projects && d.projects.length > 0) {
         window.appData = d;
         currentProjectIndex = d.activeProjectIndex || 0;
-        console.log('[Kanban] 已从本地缓存恢复 v' + (d.version||'?') + ' [' + (d.lastUpdated||'?') + ']');
+        _hasLocalCache = true;
       }
     }
-  } catch(e) { console.error('[Kanban] 读取本地缓存失败', e); }
+  } catch(e) {}
 })();
+
+// 2. 首次访问（无本地缓存）时，显示加载提示
+if (!_hasLocalCache) {
+  document.body.insertAdjacentHTML('afterbegin',
+    '<div id="loading-banner" style="position:fixed;top:0;left:0;right:0;background:var(--primary);color:#fff;text-align:center;padding:10px;font-size:13px;z-index:9999;display:flex;align-items:center;justify-content:center;gap:8px">'
+    + '<span style="display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite"></span>'
+    + '正在加载云端最新数据...</div>'
+    + '<style>@keyframes spin{to{transform:rotate(360deg)}}</style>');
+}
+function hideLoadingBanner() {
+  var el = document.getElementById('loading-banner');
+  if (el) el.style.display = 'none';
+}
 
 render();
 initProjOverview();
-// 2. 后台静默尝试加载云端更新（可选）
+// 3. 后台加载云端数据
 DataManager.tryCloudLoad(function(cloudData) {
   migrateData(cloudData);
   window.appData = cloudData;
   currentProjectIndex = cloudData.activeProjectIndex || 0;
-  // 云端数据比本地新，持久化到 localStorage
+  cloudLoaded = true;
   try { localStorage.setItem(CACHE_KEY, JSON.stringify(cloudData)); } catch(e) {}
+  hideLoadingBanner();
   render();
   initProjOverview();
-  // 如果周报面板正在显示，用云端最新数据重新生成
   if (weeklyReportVisible) generateWeeklyReport();
-  console.log('[Kanban] 云端数据已更新 ✓');
+  console.log('[Kanban] 云端数据已加载 ✓');
 });
+
+// 4. 云端超时降级
+setTimeout(function() {
+  if (!cloudLoaded) {
+    hideLoadingBanner();
+    console.log('[Kanban] 云端加载超时，使用本地数据');
+  }
+}, 5000);
 </script>
 </body>
 </html>
