@@ -295,6 +295,110 @@
   /* Scrollbar */
   #edit-modal::-webkit-scrollbar { width: 3px; }
   #edit-modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ===== WEEKLY REPORT ===== */
+  #weekly-report-section { display: none; padding: 0 16px 16px; }
+  .wr-container { background: var(--card); border-radius: 16px; padding: 20px 16px; box-shadow: var(--shadow); }
+  .wr-main-title { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 4px; color: var(--primary); }
+  .wr-subtitle { font-size: 12px; text-align: center; color: var(--text3); margin-bottom: 20px; }
+  .wr-section { margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+  .wr-section:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .wr-section-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .wr-section-title .wr-icon { font-size: 18px; }
+  .wr-section-subtitle { font-size: 12px; color: var(--text3); margin-bottom: 10px; font-weight: 500; }
+
+  /* Section 1 — overview textarea */
+  .wr-overview-textarea {
+    width: 100%; min-height: 130px; border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 12px; font-size: 14px; line-height: 1.8;
+    font-family: inherit; color: var(--text); resize: vertical; outline: none;
+    transition: border-color 0.2s; background: #FAFBFC;
+  }
+  .wr-overview-textarea:focus { border-color: var(--primary-light); background: #fff; }
+
+  /* Section 2 — per-category record groups */
+  .wr-record-group { margin-bottom: 14px; }
+  .wr-record-group-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .wr-record-group-title .wr-amount { font-size: 12px; color: var(--text3); font-weight: 500; }
+  .wr-record-item { padding: 8px 0 8px 14px; border-left: 3px solid var(--border); margin-bottom: 6px; }
+  .wr-record-item .wr-date { font-size: 11px; color: var(--text3); font-weight: 600; margin-bottom: 2px; }
+  .wr-record-item .wr-content { font-size: 13px; color: var(--text); line-height: 1.5; margin-bottom: 2px; }
+  .wr-record-item .wr-feedback { font-size: 12px; color: var(--text2); line-height: 1.4; }
+  .wr-status-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 9px; margin-left: 6px; }
+  .wr-status-tag.pending { background: #FFF8E1; color: #F57F17; }
+  .wr-status-tag.positive { background: #E8F5E9; color: #2E7D32; }
+  .wr-status-tag.blocked { background: #FBE9E7; color: #E65100; }
+  .wr-no-records { text-align: center; color: var(--text3); padding: 20px; font-size: 14px; }
+  .wr-record-summary { background: #F0F7FF; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 12px; }
+
+  /* Plan items */
+  .wr-plan-item { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #FAFBFC; border-radius: 10px; margin-bottom: 8px; border: 1.5px solid var(--border); flex-wrap: wrap; }
+  .wr-plan-content { flex: 1; min-width: 180px; }
+  .wr-plan-content textarea {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 6px 10px; font-size: 13px; font-family: inherit; outline: none; resize: vertical;
+    min-height: 36px; line-height: 1.5;
+  }
+  .wr-plan-content textarea:focus { border-color: var(--primary-light); }
+  .wr-plan-controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .wr-plan-select {
+    border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 5px 8px; font-size: 12px; font-family: inherit; outline: none;
+    background: #fff; cursor: pointer;
+  }
+  .wr-plan-select.status-completed { border-color: #A5D6A7; background: #E8F5E9; color: #2E7D32; }
+  .wr-plan-select.status-ongoing { border-color: #FFE0B2; background: #FFF8E1; color: #E65100; }
+  .wr-plan-reason {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 6px;
+    padding: 5px 10px; font-size: 12px; font-family: inherit; outline: none;
+    margin-top: 6px; min-height: 32px; resize: vertical;
+  }
+  .wr-plan-reason:focus { border-color: var(--primary-light); }
+  .wr-plan-delete {
+    width: 28px; height: 28px; border-radius: 14px; background: #FBE9E7;
+    border: none; color: var(--warning); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .wr-add-plan-btn {
+    width: 100%; height: 40px; border: 2px dashed var(--border); background: transparent;
+    border-radius: 10px; font-size: 13px; color: var(--text3); cursor: pointer;
+    transition: all 0.2s; margin-top: 4px;
+  }
+  .wr-add-plan-btn:active { background: var(--bg); border-color: var(--primary-light); color: var(--primary); }
+
+  /* Summary table */
+  .wr-summary-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; }
+  .wr-summary-table th { background: var(--primary); color: #fff; padding: 8px 6px; text-align: center; font-weight: 600; font-size: 11px; }
+  .wr-summary-table th:first-child { border-radius: 8px 0 0 0; }
+  .wr-summary-table th:last-child { border-radius: 0 8px 0 0; }
+  .wr-summary-table td { padding: 7px 6px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .wr-summary-table tbody tr:last-child td { border-bottom: 2px solid var(--primary); }
+  .wr-summary-table tfoot td { padding: 8px 6px; background: #F0F7FF; font-size: 12px; }
+  .wr-summary-table .wr-tbl-num { text-align: right; white-space: nowrap; }
+
+  /* Action buttons */
+  .wr-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+  .wr-action-btn {
+    flex: 1; min-width: 90px; height: 44px; border-radius: 10px;
+    font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s;
+  }
+  .wr-action-btn:active { opacity: 0.8; }
+  .wr-btn-save { background: var(--primary); color: #fff; }
+  .wr-btn-word { background: #1565C0; color: #fff; }
+  .wr-btn-pdf { background: #E65100; color: #fff; }
+
+  /* Print */
+  @media print {
+    body * { visibility: hidden; }
+    #weekly-report-print, #weekly-report-print * { visibility: visible; }
+    #weekly-report-print { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; }
+    #weekly-report-print .wr-actions, #weekly-report-print .wr-add-plan-btn,
+    #weekly-report-print .wr-plan-delete { display: none !important; }
+    #weekly-report-print .wr-overview-textarea, #weekly-report-print textarea {
+      border: none !important; background: none !important; padding: 0 !important;
+    }
+    #weekly-report-print .wr-plan-select { border: none; background: none; -webkit-appearance: none; }
+  }
 </style>
 </head>
 <body>
@@ -312,6 +416,22 @@
   <div class="overview-grid" id="overview-grid"></div>
 </section>
 
+<!-- PROJECT OVERVIEW EDITABLE CARD -->
+<section id="proj-overview-card" style="padding:0 16px 8px">
+  <div class="wr-container" style="padding:12px 16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <span style="font-size:14px;font-weight:700;color:var(--primary)">📋 项目概况</span>
+      <button id="pov-edit-btn" style="background:var(--primary-light);border:none;color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer" onclick="toggleProjOverviewEdit()">✏️ 编辑</button>
+    </div>
+    <div id="pov-view" style="font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-wrap;word-break:break-word"></div>
+    <textarea id="pov-edit" class="wr-overview-textarea" style="display:none;min-height:120px;font-size:13px"></textarea>
+    <div id="pov-actions" style="display:none;gap:8px;margin-top:8px">
+      <button style="background:var(--primary);color:#fff;border:none;border-radius:6px;padding:5px 16px;font-size:13px;cursor:pointer" onclick="saveProjOverview()">💾 保存</button>
+      <button style="background:#eee;border:none;border-radius:6px;padding:5px 16px;font-size:13px;cursor:pointer" onclick="cancelProjOverview()">取消</button>
+    </div>
+  </div>
+</section>
+
 <!-- TABS -->
 <div id="project-tabs"></div>
 
@@ -322,9 +442,52 @@
   <button class="add-cat-btn" onclick="addCategory()">＋ 添加分类</button>
 </section>
 
+<!-- WEEKLY REPORT SECTION -->
+<section id="weekly-report-section">
+  <div class="wr-container" id="weekly-report-print">
+    <div class="wr-main-title" id="wr-main-title">结算工作周报汇报</div>
+    <div class="wr-subtitle" id="wr-subtitle"></div>
+
+    <!-- 一、项目基本概况 -->
+    <div class="wr-section" id="wr-sec1">
+      <div class="wr-section-title"><span class="wr-icon">📋</span>一、项目基本概况</div>
+      <textarea class="wr-overview-textarea" id="wr-overview" placeholder="请输入项目基本概况..."></textarea>
+    </div>
+
+    <!-- 二、本周结算推进进展 -->
+    <div class="wr-section" id="wr-sec2">
+      <div class="wr-section-title"><span class="wr-icon">📊</span>二、本周结算推进进展</div>
+      <div class="wr-section-subtitle" id="wr-sec2-daterange"></div>
+      <div class="wr-record-summary" id="wr-sec2-summary"></div>
+      <div id="wr-sec2-records"></div>
+    </div>
+
+    <!-- 上周计划完成情况 -->
+    <div class="wr-section" id="wr-sec3_5">
+      <div class="wr-section-title"><span class="wr-icon">✅</span>上周计划完成情况</div>
+      <div id="wr-lastweek-plans"></div>
+      <button class="wr-add-plan-btn" onclick="addLastWeekPlan()">＋ 新增计划项</button>
+    </div>
+
+    <!-- 三、下周推进计划 -->
+    <div class="wr-section" id="wr-sec3">
+      <div class="wr-section-title"><span class="wr-icon">🎯</span>三、下周结算推进计划</div>
+      <div id="wr-nextweek-plans"></div>
+      <button class="wr-add-plan-btn" onclick="addNextWeekPlan()">＋ 新增计划项</button>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="wr-actions">
+      <button class="wr-action-btn wr-btn-save" onclick="saveWeeklyReport()">💾 保存周报</button>
+      <button class="wr-action-btn wr-btn-word" onclick="downloadWord()">📥 下载Word</button>
+      <button class="wr-action-btn wr-btn-pdf" onclick="downloadPDF()">🖨️ 打印PDF</button>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <div id="footer-bar">
-  <button class="footer-btn btn-secondary" onclick="openWeeklyReport()">📊 生成本周周报</button>
+  <button class="footer-btn btn-secondary" id="wr-toggle-btn" onclick="toggleWeeklyReport()">📊 生成本周周报</button>
   <button class="footer-btn btn-primary" onclick="exportData()">💾 备份数据</button>
 </div>
 
@@ -377,7 +540,7 @@ var TOKEN_KEY = 'gh_kanban_token';
   var generalBlock = '生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议';
 
   window.appData = {
-    version: "2.1", lastUpdated: now.toISOString(),
+    version: "2.2", lastUpdated: now.toISOString(),
     settings: { defaultWorkflow: wf.slice() }, activeProjectIndex: 0,
     projects: [
       { id:'proj_001',name:'临港污水处理厂排海管工程',projectBlockingIssue:generalBlock,categories:[
@@ -565,6 +728,8 @@ function switchProject(idx) {
   appData.activeProjectIndex = idx;
   DataManager.save(appData);
   render();
+  initProjOverview();
+  if (weeklyReportVisible) generateWeeklyReport();
 }
 
 // ===================== RENDER OVERVIEW =====================
@@ -760,14 +925,24 @@ function renderModalBody() {
       +'</div>';
   }).join('') : '<div style="text-align:center;color:#aaa;font-size:13px;padding:10px">暂无推进记录</div>';
 
-  // Build other categories checkboxes for batch
+  // Build other categories checkboxes for batch (exclude completed)
   var otherCatsHtml = '';
+  var hasIncomplete = false;
   proj.categories.forEach(function(c){
     if(c.id === editingCatId) return;
+    // 排除已完成流程的分类
+    if(c.currentStage >= c.workflow.length - 1) return;
+    hasIncomplete = true;
     otherCatsHtml += '<label style="display:block;padding:3px 0;font-size:13px;cursor:pointer">'
       +'<input type="checkbox" class="batch-cb" value="'+c.id+'" style="margin-right:6px">'+c.name
       +'</label>';
   });
+  if(hasIncomplete) {
+    otherCatsHtml = '<label style="display:block;padding:4px 0 8px;font-size:13px;cursor:pointer;font-weight:700;color:var(--primary);border-bottom:1px solid #e0e0e0;margin-bottom:4px">'
+      +'<input type="checkbox" id="batch-all-check" style="margin-right:6px" onchange="toggleBatchAll(this)"> 📌 添加到所有（未完成流程的 '+proj.categories.filter(function(c){return c.id!==editingCatId && c.currentStage < c.workflow.length-1;}).length+' 个分类）'
+      +'</label>'
+      + otherCatsHtml;
+  }
 
   document.getElementById('modal-body').innerHTML =
     // —— 项目堵点（顶部）——
@@ -843,6 +1018,11 @@ function deleteRecord(recId) {
   renderModalBody();
 }
 
+function toggleBatchAll(el) {
+  var cbs = document.getElementsByClassName('batch-cb');
+  for(var i=0; i<cbs.length; i++) cbs[i].checked = el.checked;
+}
+
 function addRecord() {
   var date = document.getElementById('rec-date').value;
   var content = document.getElementById('rec-content').value.trim();
@@ -855,19 +1035,33 @@ function addRecord() {
   // 始终添加到当前分类
   editState.records.push(rec);
 
-  // 批量：同时添加到其他选中分类
+  // 批量：同时添加到其他选中分类 / 添加到所有
   var batchCb = document.getElementById('batch-check');
   if(batchCb && batchCb.checked) {
     var proj = appData.projects[currentProjectIndex];
-    var cbs = document.getElementsByClassName('batch-cb');
-    for(var i=0; i<cbs.length; i++) {
-      if(cbs[i].checked) {
-        var tgt = proj.categories.find(function(c){ return c.id===cbs[i].value; });
-        if(tgt) tgt.records.push({ id:uid(), date:date, content:content, feedback:feedback, feedbackStatus:status });
+    var batchAll = document.getElementById('batch-all-check');
+    if(batchAll && batchAll.checked) {
+      // 添加到所有未完成流程的分类
+      var count = 0;
+      proj.categories.forEach(function(tgt){
+        if(tgt.id !== editingCatId && tgt.currentStage < tgt.workflow.length - 1) {
+          tgt.records.push({ id:uid(), date:date, content:content, feedback:feedback, feedbackStatus:status });
+          count++;
+        }
+      });
+      DataManager.save(appData);
+      showToast('记录已添加到全部 ' + count + ' 个分类 ✓');
+    } else {
+      var cbs = document.getElementsByClassName('batch-cb');
+      for(var i=0; i<cbs.length; i++) {
+        if(cbs[i].checked) {
+          var tgt = proj.categories.find(function(c){ return c.id===cbs[i].value; });
+          if(tgt) tgt.records.push({ id:uid(), date:date, content:content, feedback:feedback, feedbackStatus:status });
+        }
       }
+      DataManager.save(appData);
+      showToast('记录已添加到选中分类 ✓');
     }
-    DataManager.save(appData);
-    showToast('记录已添加到选中分类 ✓');
   }
 
   renderModalBody();
@@ -972,9 +1166,528 @@ function addCategory() {
   });
 }
 
+// ===================== PROJECT OVERVIEW CARD =====================
+function initProjOverview() {
+  initWeeklyReportData();
+  viewProjOverview();
+}
+
+function toggleProjOverviewEdit() {
+  var edit = document.getElementById('pov-edit');
+  if (edit.style.display === 'none') {
+    var wr = wrData(); if (!wr) return;
+    var view = document.getElementById('pov-view');
+    var actions = document.getElementById('pov-actions');
+    var btn = document.getElementById('pov-edit-btn');
+    edit.value = wr.projectOverview || '';
+    view.style.display = 'none';
+    edit.style.display = 'block';
+    actions.style.display = 'flex';
+    btn.textContent = '取消';
+    edit.focus();
+  } else {
+    cancelProjOverview();
+  }
+}
+
+function saveProjOverview() {
+  var wr = wrData(); if (!wr) return;
+  wr.projectOverview = document.getElementById('pov-edit').value;
+  viewProjOverview();
+  DataManager.save(appData);
+  showToast('项目概况已保存 ✓');
+}
+
+function cancelProjOverview() {
+  viewProjOverview();
+}
+
+function viewProjOverview() {
+  var wr = wrData();
+  var view = document.getElementById('pov-view');
+  var edit = document.getElementById('pov-edit');
+  var actions = document.getElementById('pov-actions');
+  var btn = document.getElementById('pov-edit-btn');
+  view.textContent = (wr && wr.projectOverview) ? wr.projectOverview : '（暂无内容，点击"编辑"添加项目概况信息）';
+  view.style.display = 'block';
+  edit.style.display = 'none';
+  actions.style.display = 'none';
+  btn.textContent = '✏️ 编辑';
+}
+
 // ===================== WEEKLY REPORT =====================
-function openWeeklyReport() {
-  window.open('weekly-report.html', '_blank');
+var weeklyReportVisible = false;
+
+function getWeekRange() {
+  var now = new Date();
+  var dayOfWeek = now.getDay(); // 0=Sun
+  var weekEnd = new Date(now);
+
+  if (dayOfWeek === 5) { /* Friday — today */ }
+  else if (dayOfWeek === 6) { weekEnd.setDate(weekEnd.getDate() - 1); } // Saturday → yesterday
+  else { weekEnd.setDate(weekEnd.getDate() + (5 - dayOfWeek)); } // Sun-Thu → upcoming Friday
+
+  weekEnd.setHours(23, 59, 59, 999);
+
+  var weekStart = new Date(weekEnd);
+  weekStart.setDate(weekStart.getDate() - 6);
+  weekStart.setHours(0, 0, 0, 0);
+
+  return {
+    start: weekStart.toISOString().slice(0, 10),
+    end: weekEnd.toISOString().slice(0, 10),
+    startLabel: (weekStart.getMonth()+1)+'月'+weekStart.getDate()+'日',
+    endLabel: (weekEnd.getMonth()+1)+'月'+weekEnd.getDate()+'日',
+    weekLabel: (weekStart.getMonth()+1)+'月第' + getWeekOfMonth(weekEnd) + '周'
+  };
+
+  function getWeekOfMonth(d) {
+    var firstDay = new Date(d.getFullYear(), d.getMonth(), 1);
+    var firstFri = firstDay.getDay() <= 5 ? firstDay.getDate() + (5 - firstDay.getDay()) : firstDay.getDate() + (12 - firstDay.getDay());
+    if (d.getDate() <= firstFri) return 1;
+    return 1 + Math.floor((d.getDate() - firstFri - 1) / 7) + 1;
+  }
+}
+
+function wrData() {
+  var proj = appData.projects[appData.activeProjectIndex || 0];
+  if (!proj) return null;
+  if (!appData.weeklyReport) appData.weeklyReport = {};
+  var pid = proj.id;
+  if (!appData.weeklyReport[pid]) {
+    appData.weeklyReport[pid] = {
+      projectOverview: '1、本项目合同价：20559.9702万元，于2023年9月1日完成竣工验收。\n2、项目建安总概算：22086万元（包含建安20556万元+航标灯1530万元）；\n3、预备费：1189万元（业主明确不可使用）。\n业主单位要求，本项目上报结算金额以及最终结算金额均不得超过建安总概算，即2.2亿元。',
+      lastWeekPlans: [],
+      nextWeekPlans: [
+        { id: uid(), content: '与业主单位沟通尽快召开管委会结算推进会议' },
+        { id: uid(), content: '跟进设计院竣工图纸进度，争取本月完成' },
+        { id: uid(), content: '与分包单位就结算差异部分进行洽商' },
+        { id: uid(), content: '跟进MIS系统变更签证审批流转' }
+      ],
+      reportHistory: []
+    };
+  }
+  return appData.weeklyReport[pid];
+}
+
+function scanWeekRecords(weekStart, weekEnd) {
+  var results = [];
+  var proj = appData.projects[appData.activeProjectIndex || 0];
+  if (!proj) return results;
+  proj.categories.forEach(function(cat) {
+    var recs = cat.records.filter(function(r) {
+      return r.date >= weekStart && r.date <= weekEnd;
+    });
+    if (recs.length > 0) {
+      results.push({
+        category: cat.name,
+        amount: cat.amount || 0,
+        records: recs.slice().sort(function(a,b) { return b.date.localeCompare(a.date); })
+      });
+    }
+  });
+  return results;
+}
+
+function initWeeklyReportData() {
+  wrData(); // ensures per-project structure exists
+}
+
+function toggleWeeklyReport() {
+  weeklyReportVisible = !weeklyReportVisible;
+  var section = document.getElementById('weekly-report-section');
+  var btn = document.getElementById('wr-toggle-btn');
+
+  if (weeklyReportVisible) {
+    initWeeklyReportData();
+    section.style.display = 'block';
+    btn.textContent = '📋 隐藏周报';
+    generateWeeklyReport();
+    setTimeout(function() { section.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+  } else {
+    section.style.display = 'none';
+    btn.textContent = '📊 生成本周周报';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function generateWeeklyReport() {
+  var range = getWeekRange();
+  initWeeklyReportData();
+  var wr = wrData();
+  if (!wr) return;
+
+  // Title — use active project name
+  var proj = appData.projects[appData.activeProjectIndex || 0];
+  document.getElementById('wr-main-title').textContent =
+    (proj ? proj.name : '工程') + '结算工作周报汇报（' + range.weekLabel + '）';
+  document.getElementById('wr-subtitle').textContent =
+    '统计区间：' + range.startLabel + '（周六） — ' + range.endLabel + '（周五）  |  生成日期：' + new Date().toISOString().slice(0,10);
+
+  // Section 1 — overview
+  document.getElementById('wr-overview').value = wr.projectOverview || '';
+
+  // Section 2 — records
+  var weekRecords = scanWeekRecords(range.start, range.end);
+  renderSection2(weekRecords, range);
+
+  // Section 3.5 — last week plan completion
+  renderSection3_5(wr);
+
+  // Section 3 — next week plans
+  renderSection3(wr);
+}
+
+function renderSection2(weekRecords, range) {
+  document.getElementById('wr-sec2-daterange').textContent =
+    '统计区间：' + range.startLabel + '（周六） — ' + range.endLabel + '（周五）';
+
+  var summaryEl = document.getElementById('wr-sec2-summary');
+  var recordsEl = document.getElementById('wr-sec2-records');
+
+  if (weekRecords.length === 0) {
+    summaryEl.textContent = '';
+    recordsEl.innerHTML = '<div class="wr-no-records">📭 本周暂无推进记录</div>';
+    return;
+  }
+
+  // Flatten all records with category info
+  var allRecords = [];
+  weekRecords.forEach(function(g) {
+    g.records.forEach(function(r) {
+      allRecords.push({
+        date: r.date,
+        content: r.content || '—',
+        feedback: r.feedback || '',
+        feedbackStatus: r.feedbackStatus || 'none',
+        category: g.category
+      });
+    });
+  });
+
+  // Deduplicate by (date, content, feedback)
+  var deduped = [];
+  var seen = {};
+  allRecords.forEach(function(r) {
+    var key = r.date + '|||' + r.content + '|||' + r.feedback;
+    if (!seen[key]) { seen[key] = { record: r, categories: [] }; deduped.push(seen[key]); }
+    var cats = seen[key].categories;
+    if (cats.indexOf(r.category) === -1) cats.push(r.category);
+  });
+
+  summaryEl.innerHTML = '本周共录入 <b>' + allRecords.length + '</b> 条推进信息，'
+    + '去重后 <b>' + deduped.length + '</b> 条，涉及 <b>' + weekRecords.length + '</b> 个分类。';
+
+  var statusLabels = { pending: '⏳等待反馈', positive: '✅推进顺利', blocked: '🚫受阻', none: '📝仅记录' };
+
+  // Group by date (desc)
+  var byDate = {};
+  deduped.forEach(function(item) {
+    var d = item.record.date;
+    if (!byDate[d]) byDate[d] = [];
+    byDate[d].push(item);
+  });
+
+  // Collect records whose content was batch-added to 2+ categories — merge them once
+  // Sort for display: unique (single-cat) records first, shared (multi-cat) records grouped
+  var html = '';
+  Object.keys(byDate).sort().reverse().forEach(function(date) {
+    html += '<div style="font-size:13px;font-weight:700;color:var(--primary);margin:14px 0 6px">📅 ' + date + '</div>';
+    byDate[date].forEach(function(item) {
+      var r = item.record;
+      var sc = r.feedbackStatus;
+      var isShared = item.categories.length > 1;
+      html += '<div class="wr-record-item" style="border-left:3px solid ' + (sc==='positive'?'#A5D6A7':sc==='blocked'?'#F48FB1':'#90CAF9') + ';margin-bottom:8px">';
+      html += '<div class="wr-content">' + r.content + '</div>';
+      if (r.feedback) html += '<div class="wr-feedback">↳ ' + r.feedback + '</div>';
+      html += '<span class="wr-status-tag ' + sc + '">' + (statusLabels[sc] || sc) + '</span>';
+      if (isShared) {
+        html += '<span style="font-size:10px;color:var(--text3);margin-left:6px">（' + item.categories.length + '项）</span>';
+      } else {
+        html += '<span style="font-size:10px;color:var(--text3);margin-left:6px">— ' + item.categories[0] + '</span>';
+      }
+      html += '</div>';
+    });
+  });
+
+  recordsEl.innerHTML = html + renderSection2Table();
+}
+
+function renderSection2Table() {
+  var proj = appData.projects[appData.activeProjectIndex || 0];
+  if (!proj || !proj.categories.length) return '';
+
+  var cats = proj.categories;
+  var totalAmount = 0;
+
+  // Build table rows
+  var rows = '';
+  cats.forEach(function(c, i) {
+    var amt = Number(c.amount) || 0;
+    totalAmount += amt;
+    // Latest record by date — completed categories show "已完成所有流程"
+    var latest = '';
+    if (c.currentStage >= c.workflow.length - 1) {
+      latest = '已完成所有流程';
+    } else if (c.records && c.records.length) {
+      var sorted = c.records.slice().sort(function(a, b) { return b.date.localeCompare(a.date); });
+      latest = sorted[0].content || '';
+    }
+    rows += '<tr>'
+      + '<td>' + (i + 1) + '</td>'
+      + '<td>' + c.name + '</td>'
+      + '<td class="wr-tbl-num">' + amt.toFixed(2) + '</td>'
+      + '<td>' + (latest || '—') + '</td>'
+      + '</tr>';
+  });
+
+  var html = '<div class="wr-section" style="border-bottom:none;margin-top:18px;padding-bottom:0">'
+    + '<div class="wr-section-title"><span class="wr-icon">📋</span>结算事项汇总表</div>'
+    + '<table class="wr-summary-table">'
+    + '<thead><tr><th style="width:40px">序号</th><th>事项</th><th style="width:90px">费用（万元）</th><th>最新进展</th></tr></thead>'
+    + '<tbody>' + rows + '</tbody>'
+    + '<tfoot><tr><td></td><td><b>合计</b></td><td class="wr-tbl-num"><b>' + totalAmount.toFixed(2) + '</b></td><td></td></tr></tfoot>'
+    + '</table></div>';
+
+  return html;
+}
+
+function renderSection3_5(wr) {
+  var el = document.getElementById('wr-lastweek-plans');
+  if (!wr.lastWeekPlans || wr.lastWeekPlans.length === 0) {
+    el.innerHTML = '<div style="text-align:center;color:#aaa;font-size:13px;padding:10px">暂无上周计划（首次生成周报时可从下方"下周推进计划"中自动继承）</div>';
+    return;
+  }
+
+  var html = '';
+  wr.lastWeekPlans.forEach(function(plan, idx) {
+    var stCompleted = plan.status === 'completed';
+    html += '<div class="wr-plan-item">'
+      + '<div class="wr-plan-content">'
+        + '<div style="font-size:13px;font-weight:600;margin-bottom:4px">计划' + (idx+1) + '：' + plan.content + '</div>'
+        + '<div class="wr-plan-controls">'
+          + '<select class="wr-plan-select ' + (stCompleted ? 'status-completed' : 'status-ongoing') + '" onchange="updateLastWeekPlanStatus(\'' + plan.id + '\', this.value)">'
+            + '<option value="ongoing"' + (!stCompleted ? ' selected' : '') + '>🔄 持续推进中</option>'
+            + '<option value="completed"' + (stCompleted ? ' selected' : '') + '>✅ 已完成</option>'
+          + '</select>'
+        + '</div>'
+        + '<input class="wr-plan-reason" placeholder="补充说明（如未完成原因、遇到问题等）" value="' + (plan.reason || '').replace(/"/g, '&quot;') + '" onchange="updateLastWeekPlanReason(\'' + plan.id + '\', this.value)">'
+      + '</div>'
+      + '<button class="wr-plan-delete" onclick="deleteLastWeekPlan(\'' + plan.id + '\')" title="删除">×</button>'
+    + '</div>';
+  });
+
+  el.innerHTML = html;
+}
+
+function renderSection3(wr) {
+  var el = document.getElementById('wr-nextweek-plans');
+  if (!wr.nextWeekPlans || wr.nextWeekPlans.length === 0) {
+    el.innerHTML = '<div style="text-align:center;color:#aaa;font-size:13px;padding:10px">暂无下周计划，点击下方添加</div>';
+    return;
+  }
+
+  var html = '';
+  wr.nextWeekPlans.forEach(function(plan, idx) {
+    html += '<div class="wr-plan-item">'
+      + '<div class="wr-plan-content">'
+        + '<textarea placeholder="请输入计划内容..." onchange="updateNextWeekPlan(\'' + plan.id + '\', this.value)">' + plan.content + '</textarea>'
+      + '</div>'
+      + '<button class="wr-plan-delete" onclick="deleteNextWeekPlan(\'' + plan.id + '\')" title="删除">×</button>'
+    + '</div>';
+  });
+
+  el.innerHTML = html;
+}
+
+// ---- CRUD for plans ----
+
+function addLastWeekPlan() {
+  initWeeklyReportData();
+  var wr = wrData(); if (!wr) return;
+  wr.lastWeekPlans.push({ id: uid(), content: '', status: 'ongoing', reason: '' });
+  renderSection3_5(wr);
+}
+
+function updateLastWeekPlanStatus(id, val) {
+  var wr = wrData(); if (!wr) return;
+  var plan = wr.lastWeekPlans.find(function(p) { return p.id === id; });
+  if (plan) { plan.status = val; renderSection3_5(wr); }
+}
+
+function updateLastWeekPlanReason(id, val) {
+  var wr = wrData(); if (!wr) return;
+  var plan = wr.lastWeekPlans.find(function(p) { return p.id === id; });
+  if (plan) plan.reason = val;
+}
+
+function deleteLastWeekPlan(id) {
+  var wr = wrData(); if (!wr) return;
+  wr.lastWeekPlans = wr.lastWeekPlans.filter(function(p) { return p.id !== id; });
+  renderSection3_5(wr);
+}
+
+function addNextWeekPlan() {
+  initWeeklyReportData();
+  var wr = wrData(); if (!wr) return;
+  wr.nextWeekPlans.push({ id: uid(), content: '' });
+  renderSection3(wr);
+}
+
+function updateNextWeekPlan(id, val) {
+  var wr = wrData(); if (!wr) return;
+  var plan = wr.nextWeekPlans.find(function(p) { return p.id === id; });
+  if (plan) plan.content = val;
+}
+
+function deleteNextWeekPlan(id) {
+  var wr = wrData(); if (!wr) return;
+  wr.nextWeekPlans = wr.nextWeekPlans.filter(function(p) { return p.id !== id; });
+  renderSection3(wr);
+}
+
+// ---- SAVE ----
+
+function saveWeeklyReport() {
+  var wr = wrData(); if (!wr) return;
+  var overviewEl = document.getElementById('wr-overview');
+  if (overviewEl) wr.projectOverview = overviewEl.value;
+
+  var range = getWeekRange();
+  var weekRecords = scanWeekRecords(range.start, range.end);
+
+  wr.reportHistory = wr.reportHistory || [];
+  wr.reportHistory = wr.reportHistory.filter(function(h) { return h.weekEnd !== range.end; });
+  wr.reportHistory.push({
+    weekEnd: range.end,
+    savedAt: new Date().toISOString(),
+    projectOverview: wr.projectOverview,
+    lastWeekPlans: JSON.parse(JSON.stringify(wr.lastWeekPlans)),
+    nextWeekPlans: JSON.parse(JSON.stringify(wr.nextWeekPlans)),
+    recordCount: weekRecords.reduce(function(s,g) { return s + g.records.length; }, 0)
+  });
+  if (wr.reportHistory.length > 12) wr.reportHistory = wr.reportHistory.slice(-12);
+
+  // Auto-promote: current nextWeekPlans → next week's lastWeekPlans
+  var nextPlans = wr.nextWeekPlans.filter(function(p) { return p.content.trim(); });
+  wr.lastWeekPlans = nextPlans.map(function(p) {
+    return { id: uid(), content: p.content, status: 'ongoing', reason: '' };
+  });
+
+  DataManager.save(appData);
+  generateWeeklyReport();
+  showToast('周报已保存 ✓');
+}
+
+// ---- DOWNLOADS ----
+
+function downloadWord() {
+  var wr = wrData(); if (!wr) return;
+  var overviewEl = document.getElementById('wr-overview');
+  if (overviewEl) wr.projectOverview = overviewEl.value;
+
+  var range = getWeekRange();
+  var weekRecords = scanWeekRecords(range.start, range.end);
+
+  var statusLabels = { pending: '⏳等待反馈', positive: '✅推进顺利', blocked: '🚫受阻', none: '📝仅记录' };
+
+  // Deduplicate records for Word output
+  var allRecords = [];
+  weekRecords.forEach(function(g) {
+    g.records.forEach(function(r) {
+      allRecords.push({ date: r.date, content: r.content || '—', feedback: r.feedback || '', feedbackStatus: r.feedbackStatus || 'none', category: g.category });
+    });
+  });
+  var seen = {}, deduped = [];
+  allRecords.forEach(function(r) {
+    var key = r.date + '|||' + r.content + '|||' + r.feedback;
+    if (!seen[key]) { seen[key] = { record: r, cats: [r.category] }; deduped.push(seen[key]); }
+    else if (seen[key].cats.indexOf(r.category) === -1) seen[key].cats.push(r.category);
+  });
+
+  var recordsHtml = '';
+  if (deduped.length === 0) {
+    recordsHtml = '<p>本周暂无推进记录。</p>';
+  } else {
+    var byDate = {};
+    deduped.forEach(function(item) { var d = item.record.date; if (!byDate[d]) byDate[d] = []; byDate[d].push(item); });
+    Object.keys(byDate).sort().reverse().forEach(function(date) {
+      recordsHtml += '<p><b>' + date + '</b></p>';
+      byDate[date].forEach(function(item) {
+        var r = item.record, sc = r.feedbackStatus;
+        recordsHtml += '<p style="margin-left:20px">· ' + r.content;
+        if (r.feedback) recordsHtml += '（' + r.feedback + '）';
+        recordsHtml += ' <i>' + (statusLabels[sc] || sc) + '</i>';
+        if (item.cats.length > 1) recordsHtml += ' (' + item.cats.length + '项)';
+        else recordsHtml += ' — ' + item.cats[0];
+        recordsHtml += '</p>';
+      });
+    });
+  }
+
+  var lastWeekHtml = '';
+  (wr.lastWeekPlans || []).forEach(function(p, i) {
+    var st = p.status === 'completed' ? '已完成' : '持续推进中';
+    lastWeekHtml += '<p>' + (i+1) + '、' + p.content + ' — <b>' + st + '</b>';
+    if (p.reason) lastWeekHtml += '（' + p.reason + '）';
+    lastWeekHtml += '</p>';
+  });
+
+  var nextWeekHtml = '';
+  (wr.nextWeekPlans || []).forEach(function(p, i) {
+    nextWeekHtml += '<p>' + (i+1) + '、' + p.content + '</p>';
+  });
+
+  // Summary table for Word
+  var proj = appData.projects[appData.activeProjectIndex || 0];
+  var tableHtml = '';
+  if (proj && proj.categories.length) {
+    tableHtml = '<h2>结算事项汇总表</h2><table>';
+    tableHtml += '<tr><th>序号</th><th>事项</th><th>费用（万元）</th><th>最新进展</th></tr>';
+    var ttl = 0;
+    proj.categories.forEach(function(c, i) {
+      var amt = Number(c.amount) || 0; ttl += amt;
+      var latest = '—';
+      if (c.currentStage >= c.workflow.length - 1) {
+        latest = '已完成所有流程';
+      } else if (c.records && c.records.length) {
+        var sorted = c.records.slice().sort(function(a,b){return b.date.localeCompare(a.date);});
+        latest = sorted[0].content || '—';
+      }
+      tableHtml += '<tr><td>' + (i+1) + '</td><td>' + c.name + '</td><td>' + amt.toFixed(2) + '</td><td>' + latest + '</td></tr>';
+    });
+    tableHtml += '<tr><td></td><td><b>合计</b></td><td><b>' + ttl.toFixed(2) + '</b></td><td></td></tr></table>';
+  }
+
+  var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'
+    + '<head><meta charset="UTF-8"><title>结算周报</title>'
+    + '<style>body{font-family:SimSun,serif;font-size:14px;line-height:1.8;padding:40px}h1{text-align:center;font-size:18px}h2{font-size:16px;margin-top:20px;border-bottom:1px solid #ccc;padding-bottom:4px}p{margin:6px 0}table{border-collapse:collapse;width:100%;margin:10px 0}td,th{border:1px solid #333;padding:6px 10px;font-size:13px}th{background:#ddd}</style></head>'
+    + '<body>'
+    + '<h1>' + document.getElementById('wr-main-title').textContent + '</h1>'
+    + '<p style="text-align:center;color:#666">' + document.getElementById('wr-subtitle').textContent + '</p>'
+    + '<h2>一、项目基本概况</h2>'
+    + '<p>' + (wr.projectOverview || '').replace(/\n/g, '<br>') + '</p>'
+    + '<h2>二、本周结算推进进展</h2>' + recordsHtml
+    + tableHtml
+    + '<h2>上周计划完成情况</h2>' + (lastWeekHtml || '<p>暂无</p>')
+    + '<h2>三、下周结算推进计划</h2>' + (nextWeekHtml || '<p>暂无</p>')
+    + '</body></html>';
+
+  var blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = '结算周报_' + range.end + '.doc';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Word 下载中...');
+}
+
+function downloadPDF() {
+  var wr = wrData(); if (!wr) return;
+  var overviewEl = document.getElementById('wr-overview');
+  if (overviewEl) wr.projectOverview = overviewEl.value;
+  generateWeeklyReport();
+  setTimeout(function() { window.print(); }, 200);
 }
 
 // ===================== EXPORT DATA =====================
@@ -993,10 +1706,33 @@ function exportData() {
 // ===================== DATA MIGRATION =====================
 function migrateData(d) {
   if(!d || !d.projects) return d;
-  d.version = d.version || "2.1";
+  d.version = d.version || "2.2";
   d.projects.forEach(function(p){
     if(p.projectBlockingIssue === undefined) p.projectBlockingIssue = '';
   });
+  // Ensure weeklyReport is per-project (v2.3+)
+  if(!d.weeklyReport || !d.weeklyReport[d.projects[0].id]) {
+    var oldWR = d.weeklyReport;
+    d.weeklyReport = {};
+    d.projects.forEach(function(p) {
+      if (oldWR && oldWR.projectOverview) {
+        // Migrate from old flat structure (v2.2)
+        d.weeklyReport[p.id] = JSON.parse(JSON.stringify(oldWR));
+      } else {
+        d.weeklyReport[p.id] = {
+          projectOverview: '1、本项目合同价：20559.9702万元，于2023年9月1日完成竣工验收。\n2、项目建安总概算：22086万元（包含建安20556万元+航标灯1530万元）；\n3、预备费：1189万元（业主明确不可使用）。\n业主单位要求，本项目上报结算金额以及最终结算金额均不得超过建安总概算，即2.2亿元。',
+          lastWeekPlans: [],
+          nextWeekPlans: [
+            { id: uid(), content: '与业主单位沟通尽快召开管委会结算推进会议' },
+            { id: uid(), content: '跟进设计院竣工图纸进度，争取本月完成' },
+            { id: uid(), content: '与分包单位就结算差异部分进行洽商' },
+            { id: uid(), content: '跟进MIS系统变更签证审批流转' }
+          ],
+          reportHistory: []
+        };
+      }
+    });
+  }
   return d;
 }
 
@@ -1017,6 +1753,7 @@ function migrateData(d) {
 })();
 
 render();
+initProjOverview();
 // 2. 后台静默尝试加载云端更新（可选）
 DataManager.tryCloudLoad(function(cloudData) {
   migrateData(cloudData);
@@ -1025,6 +1762,9 @@ DataManager.tryCloudLoad(function(cloudData) {
   // 云端数据比本地新，持久化到 localStorage
   try { localStorage.setItem(CACHE_KEY, JSON.stringify(cloudData)); } catch(e) {}
   render();
+  initProjOverview();
+  // 如果周报面板正在显示，用云端最新数据重新生成
+  if (weeklyReportVisible) generateWeeklyReport();
   console.log('[Kanban] 云端数据已更新 ✓');
 });
 </script>
