@@ -738,7 +738,8 @@ function statusLabel(cat) {
 function switchProject(idx) {
   currentProjectIndex = idx;
   appData.activeProjectIndex = idx;
-  DataManager.save(appData);
+  // 仅本地持久化，不触发云端同步和token弹窗
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(appData)); } catch(e) {}
   render();
   initProjOverview();
   if (weeklyReportVisible) generateWeeklyReport();
