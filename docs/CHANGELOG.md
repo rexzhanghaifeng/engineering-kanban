@@ -1,5 +1,31 @@
 # 版本变更历史
 
+## v2.5 (2026-06-26)
+
+### 重构
+- **彻底修复"上周计划完成情况"数据流**：移除 `saveWeeklyReport()` 中的 auto-promote 逻辑（根因），auto-promote 改为在打开周报时执行（`ensureLastWeekPlansPromoted()`）
+- **上周计划内容可编辑**：`renderSection3_5()` 中 plan.content 从静态文本改为 `<textarea>`，新增 `updateLastWeekPlanContent()` 函数
+- **保存/PDF/Word 统一数据源**：三处均直接使用 `wr.lastWeekPlans`，不再需要 reportHistory 回退逻辑
+
+### 核心逻辑变更
+- **旧逻辑（v2.4）**：保存时 auto-promote nextWeekPlans → lastWeekPlans → 保存后显示被覆盖 ❌
+- **新逻辑（v2.5）**：保存只做快照 → 打开时检查是否新一周 → 从上周 reportHistory 取 nextWeekPlans 晋升为 lastWeekPlans ✅
+- 晋升时机：`toggleWeeklyReport()` 显示时调用 `ensureLastWeekPlansPromoted()`，通过 `_lastPromotedWeek` 标记防止重复晋升
+
+### 数据安全
+- 新增可选字段 `_lastPromotedWeek`（旧数据中 undefined → 自动触发一次晋升）
+- 不改任何现有字段格式、不碰 DataManager/Gist 逻辑
+- reportHistory 格式不变，向后兼容 v2.2/2.3/2.4
+
+### 技术细节
+- `saveWeeklyReport`：DOM回读 reason + content → reportHistory快照 → DataManager.save → 渲染（不再覆盖 lastWeekPlans）
+- `ensureLastWeekPlansPromoted`：检查 `_lastPromotedWeek === range.end` → 跳过；否则查找上周 reportHistory → 晋升 nextWeekPlans
+- `downloadPDF`：简化为 DOM同步 → generateWeeklyReport → window.print（移除 afterprint 恢复逻辑）
+- `downloadWord`：直接用 `wr.lastWeekPlans`（移除 reportHistory 回退）
+- 版本号 2.4 → 2.5
+
+---
+
 ## v2.4 (2026-06-26)
 
 ### 修复
