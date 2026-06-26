@@ -540,7 +540,7 @@ var TOKEN_KEY = 'gh_kanban_token';
   var generalBlock = '生态处潘总工已退休，正处职务交接阶段；待业主单位另行组织管委会结算推进会议';
 
   window.appData = {
-    version: "2.2", lastUpdated: "2000-01-01T00:00:00.000Z",
+    version: "2.4", lastUpdated: "2000-01-01T00:00:00.000Z",
     settings: { defaultWorkflow: wf.slice() }, activeProjectIndex: 0,
     projects: [
       { id:'proj_001',name:'临港污水处理厂排海管工程',projectBlockingIssue:generalBlock,categories:[
@@ -1485,7 +1485,7 @@ function renderSection3_5(wr) {
             + '<option value="completed"' + (stCompleted ? ' selected' : '') + '>✅ 已完成</option>'
           + '</select>'
         + '</div>'
-        + '<input class="wr-plan-reason" placeholder="补充说明（如未完成原因、遇到问题等）" value="' + (plan.reason || '').replace(/"/g, '&quot;') + '" onchange="updateLastWeekPlanReason(\'' + plan.id + '\', this.value)">'
+        + '<input class="wr-plan-reason" placeholder="补充说明（如未完成原因、遇到问题等）" value="' + (plan.reason || '').replace(/"/g, '&quot;') + '" oninput="updateLastWeekPlanReason(\'' + plan.id + '\', this.value)">'
       + '</div>'
       + '<button class="wr-plan-delete" onclick="deleteLastWeekPlan(\'' + plan.id + '\')" title="删除">×</button>'
     + '</div>';
@@ -1562,7 +1562,16 @@ function deleteNextWeekPlan(id) {
 
 // ---- SAVE ----
 
+function checkReportDay() {
+  if (new Date().getDay() !== 5) {
+    showToast('⛔ 非周报生成时间，请于周五操作');
+    return false;
+  }
+  return true;
+}
+
 function saveWeeklyReport() {
+  if (!checkReportDay()) return;
   var wr = wrData(); if (!wr) return;
   var overviewEl = document.getElementById('wr-overview');
   if (overviewEl) wr.projectOverview = overviewEl.value;
@@ -1589,13 +1598,21 @@ function saveWeeklyReport() {
   });
 
   DataManager.save(appData);
+
+  // Render with the SAVED lastWeekPlans (from reportHistory), not the auto-promoted ones
+  var savedPlans = JSON.parse(JSON.stringify(wr.reportHistory[wr.reportHistory.length - 1].lastWeekPlans));
+  var autoPromoted = wr.lastWeekPlans;
+  wr.lastWeekPlans = savedPlans;
   generateWeeklyReport();
+  wr.lastWeekPlans = autoPromoted;
+
   showToast('周报已保存 ✓');
 }
 
 // ---- DOWNLOADS ----
 
 function downloadWord() {
+  if (!checkReportDay()) return;
   var wr = wrData(); if (!wr) return;
   var overviewEl = document.getElementById('wr-overview');
   if (overviewEl) wr.projectOverview = overviewEl.value;
@@ -1640,7 +1657,11 @@ function downloadWord() {
   }
 
   var lastWeekHtml = '';
-  (wr.lastWeekPlans || []).forEach(function(p, i) {
+  var exportLastWeekPlans = wr.lastWeekPlans || [];
+  if (wr.reportHistory && wr.reportHistory.length > 0) {
+    exportLastWeekPlans = wr.reportHistory[wr.reportHistory.length - 1].lastWeekPlans || exportLastWeekPlans;
+  }
+  (exportLastWeekPlans).forEach(function(p, i) {
     var st = p.status === 'completed' ? '已完成' : '持续推进中';
     lastWeekHtml += '<p>' + (i+1) + '、' + p.content + ' — <b>' + st + '</b>';
     if (p.reason) lastWeekHtml += '（' + p.reason + '）';
@@ -1697,6 +1718,7 @@ function downloadWord() {
 }
 
 function downloadPDF() {
+  if (!checkReportDay()) return;
   var wr = wrData(); if (!wr) return;
   var overviewEl = document.getElementById('wr-overview');
   if (overviewEl) wr.projectOverview = overviewEl.value;
@@ -1721,6 +1743,7 @@ function exportData() {
 function migrateData(d) {
   if(!d || !d.projects) return d;
   d.version = d.version || "2.2";
+  if (d.version === "2.2" || d.version === "2.3") d.version = "2.4";
   d.projects.forEach(function(p){
     if(p.projectBlockingIssue === undefined) p.projectBlockingIssue = '';
   });
