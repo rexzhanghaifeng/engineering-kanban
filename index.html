@@ -1598,14 +1598,7 @@ function saveWeeklyReport() {
   });
 
   DataManager.save(appData);
-
-  // Render with the SAVED lastWeekPlans (from reportHistory), not the auto-promoted ones
-  var savedPlans = JSON.parse(JSON.stringify(wr.reportHistory[wr.reportHistory.length - 1].lastWeekPlans));
-  var autoPromoted = wr.lastWeekPlans;
-  wr.lastWeekPlans = savedPlans;
   generateWeeklyReport();
-  wr.lastWeekPlans = autoPromoted;
-
   showToast('周报已保存 ✓');
 }
 
@@ -1722,7 +1715,26 @@ function downloadPDF() {
   var wr = wrData(); if (!wr) return;
   var overviewEl = document.getElementById('wr-overview');
   if (overviewEl) wr.projectOverview = overviewEl.value;
+
+  // Use saved report data for print so that completion reasons are visible
+  var actualLastWeek = wr.lastWeekPlans;
+  if (wr.reportHistory && wr.reportHistory.length > 0) {
+    wr.lastWeekPlans = wr.reportHistory[wr.reportHistory.length - 1].lastWeekPlans;
+  }
   generateWeeklyReport();
+
+  var restored = false;
+  var doRestore = function() {
+    if (restored) return;
+    restored = true;
+    wr.lastWeekPlans = actualLastWeek;
+    generateWeeklyReport();
+    window.removeEventListener('afterprint', doRestore);
+  };
+  window.addEventListener('afterprint', doRestore);
+  // Fallback: restore after 60s if afterprint never fires
+  setTimeout(doRestore, 60000);
+
   setTimeout(function() { window.print(); }, 200);
 }
 

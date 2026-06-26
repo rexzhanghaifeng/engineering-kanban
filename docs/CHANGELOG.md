@@ -4,14 +4,16 @@
 
 ### 修复
 - **上周计划完成情况显示错误**：保存周报后不再被 auto-promote 覆盖，始终展示已保存的完成状态和原因
-- **补充说明输入框无法保存**：`onchange` → `oninput`，打字即存，点击保存按钮不会丢失
-- **Word导出源一致性**：`downloadWord()` 的"上周计划完成情况"改为从 `reportHistory` 读取，与页面显示一致
+- **补充说明输入框无法保存**：修复保存后 DOM ID 与数据 ID 不匹配导致 `updateLastWeekPlanReason` 查找失败的问题；`onchange` → `oninput`，打字即存
+- **PDF打印预览不显示补充说明**：`downloadPDF()` 打印前从 `reportHistory` 读取上周计划数据，打印后恢复当前编辑状态
+- **Word导出源一致性**：`downloadWord()` 的"上周计划完成情况"从 `reportHistory` 读取
 
 ### 新增
 - **周五保护**：`saveWeeklyReport()` / `downloadWord()` / `downloadPDF()` 增加当日星期检查，非周五操作弹出"非周报生成时间"提示
 
 ### 技术细节
-- 保存流程：reportHistory 深拷贝 → auto-promote → 临时回填显示 → 恢复 auto-promoted 状态
+- 保存流程：reportHistory 深拷贝 → auto-promote → 直接渲染（移除临时回填逻辑，消除 ID 不一致）
+- PDF打印：临时替换 `wr.lastWeekPlans` 为 reportHistory 数据 → `generateWeeklyReport()` → `window.print()` → `afterprint` 事件恢复（+ 60s 兜底）
 - 版本号 2.3 → 2.4，migrateData 兼容 2.2/2.3 自动升级
 
 ---
