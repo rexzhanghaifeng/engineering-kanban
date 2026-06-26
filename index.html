@@ -1485,7 +1485,7 @@ function renderSection3_5(wr) {
             + '<option value="completed"' + (stCompleted ? ' selected' : '') + '>✅ 已完成</option>'
           + '</select>'
         + '</div>'
-        + '<input class="wr-plan-reason" placeholder="补充说明（如未完成原因、遇到问题等）" value="' + (plan.reason || '').replace(/"/g, '&quot;') + '" oninput="updateLastWeekPlanReason(\'' + plan.id + '\', this.value)">'
+        + '<input class="wr-plan-reason" data-plan-id="' + plan.id + '" placeholder="补充说明（如未完成原因、遇到问题等）" value="' + (plan.reason || '').replace(/"/g, '&quot;') + '" oninput="updateLastWeekPlanReason(\'' + plan.id + '\', this.value)">'
       + '</div>'
       + '<button class="wr-plan-delete" onclick="deleteLastWeekPlan(\'' + plan.id + '\')" title="删除">×</button>'
     + '</div>';
@@ -1575,6 +1575,17 @@ function saveWeeklyReport() {
   var wr = wrData(); if (!wr) return;
   var overviewEl = document.getElementById('wr-overview');
   if (overviewEl) wr.projectOverview = overviewEl.value;
+
+  // Sync reason inputs from DOM → data model (defensive: guarantee capture)
+  var reasonInputs = document.querySelectorAll('.wr-plan-reason');
+  for (var ri = 0; ri < reasonInputs.length; ri++) {
+    var inp = reasonInputs[ri];
+    var pid = inp.getAttribute('data-plan-id');
+    if (pid) {
+      var plan = wr.lastWeekPlans.find(function(p) { return p.id === pid; });
+      if (plan) plan.reason = inp.value;
+    }
+  }
 
   var range = getWeekRange();
   var weekRecords = scanWeekRecords(range.start, range.end);

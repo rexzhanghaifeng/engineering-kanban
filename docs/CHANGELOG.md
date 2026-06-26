@@ -3,18 +3,20 @@
 ## v2.4 (2026-06-26)
 
 ### 修复
-- **上周计划完成情况显示错误**：保存周报后不再被 auto-promote 覆盖，始终展示已保存的完成状态和原因
-- **补充说明输入框无法保存**：修复保存后 DOM ID 与数据 ID 不匹配导致 `updateLastWeekPlanReason` 查找失败的问题；`onchange` → `oninput`，打字即存
-- **PDF打印预览不显示补充说明**：`downloadPDF()` 打印前从 `reportHistory` 读取上周计划数据，打印后恢复当前编辑状态
-- **Word导出源一致性**：`downloadWord()` 的"上周计划完成情况"从 `reportHistory` 读取
+- **补充说明无法保存（根因修复）**：`saveWeeklyReport()` 改为双重保障机制 — ① `oninput` 实时同步 ② 保存前通过 `data-plan-id` 从 DOM 回读所有 `.wr-plan-reason` 输入值到数据模型。消除了"只靠 oninput 事件"的单点故障风险
+- **上周计划完成情况显示错误**：保存周报后不再被 auto-promote 覆盖
+- **PDF打印预览不显示补充说明**：`downloadPDF()` 打印前从 `reportHistory` 读取上周计划数据，打印后恢复
+- **Word导出源一致性**：`downloadWord()` 从 `reportHistory` 读取
 
 ### 新增
-- **周五保护**：`saveWeeklyReport()` / `downloadWord()` / `downloadPDF()` 增加当日星期检查，非周五操作弹出"非周报生成时间"提示
+- **周五保护**：`saveWeeklyReport()` / `downloadWord()` / `downloadPDF()` 增加当日星期检查
+- reason 输入框增加 `data-plan-id` 属性，实现 DOM→数据模型的可靠映射
 
 ### 技术细节
-- 保存流程：reportHistory 深拷贝 → auto-promote → 直接渲染（移除临时回填逻辑，消除 ID 不一致）
-- PDF打印：临时替换 `wr.lastWeekPlans` 为 reportHistory 数据 → `generateWeeklyReport()` → `window.print()` → `afterprint` 事件恢复（+ 60s 兜底）
-- 版本号 2.3 → 2.4，migrateData 兼容 2.2/2.3 自动升级
+- 保存流程：DOM回读同步 → reportHistory深拷贝 → auto-promote → 渲染
+- `oninput`（实时同步） + DOM回读（保存时兜底）= 双重保障
+- PDF打印：reportHistory临时替换 → afterprint恢复 + 60s兜底
+- 版本号 2.3 → 2.4
 
 ---
 
